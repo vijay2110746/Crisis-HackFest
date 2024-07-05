@@ -29,9 +29,6 @@ class RequestsPage extends StatelessWidget {
                   height: 60,
                   width: 170,
                   onPressed: () {
-                    // Handle Boats button press
-                    _handleBoatsRequest();
-                  },
     Navigator.push(context,
     MaterialPageRoute(builder: (context) => const BoatAskingPage()));
     }
@@ -42,10 +39,6 @@ class RequestsPage extends StatelessWidget {
                   icon: Icons.local_drink,
                   height: 60,
                   width: 170,
-                  onPressed: () {
-                    // Handle Water Cans button press
-                    _handleWaterCansRequest();
-                  },
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => const CanAskingPage()));
@@ -63,8 +56,6 @@ class RequestsPage extends StatelessWidget {
                   height: 60,
                   width: 170,
                   onPressed: () {
-                    // Handle Medical Assistance button press
-                    _handleMedicalAssistanceRequest();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const MedicalAssistance()));
                   },
@@ -76,8 +67,6 @@ class RequestsPage extends StatelessWidget {
                   height: 60,
                   width: 170,
                   onPressed: () {
-                    // Handle Food & Groceries button press
-                    _handleFoodGroceriesRequest();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const FoodProvider()));
                   },
@@ -93,8 +82,6 @@ class RequestsPage extends StatelessWidget {
                   height: 60,
                   width: 170,
                   onPressed: () {
-                    // Handle Charging Stations button press
-                    _handleChargingStationsRequest();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const ChargingPoint()));
                   },
@@ -151,16 +138,6 @@ class RequestsPage extends StatelessWidget {
   void _handleAlertPress() {
     // Handle alert button press functionality
     print("Alert button pressed");
-  }
-
-  void _handleBoatsRequest() {
-    // Handle Boats button press functionality
-    print("Boats button pressed");
-  }
-
-  void _handleWaterCansRequest() {
-    // Handle Water Cans button press functionality
-    print("Water Cans button pressed");
   }
 
   void _handleMedicalAssistanceRequest() {
