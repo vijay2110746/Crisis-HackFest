@@ -1,4 +1,4 @@
-import 'dart:developer';
+// import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,6 +7,7 @@ import 'package:untitled2/components/my_textfield.dart';
 import 'package:untitled2/components/square_tile.dart';
 import 'package:untitled2/pages/posts.dart';
 import 'package:untitled2/pages/dataservice.dart';
+import 'package:untitled2/components/bottom_navbar.dart';
 
 import 'loginservice.dart';
 // import 'package:untitled2/pages/authservice.dart';
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
   void signUserIn(BuildContext context)async{
     await db.createUser(usernameController.text.trim(), emailidController.text.trim(), mobilenumberController.text.trim(), passwordController.text.trim());
     await LoginService.setLoggedIn(true);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PostsPage()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar()));
 
 
   }
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
         await LoginService.setLoggedIn(true);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PostsPage()),
+          MaterialPageRoute(builder: (context) => BottomNavBar()),
         );
       }
     }catch(e){

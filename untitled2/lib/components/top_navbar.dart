@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
-  Size get preferredSize => Size.fromHeight(80.0);
+  Size get preferredSize => Size.fromHeight(60.0);
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(
           Icons.menu, 
-          color: Colors.black,
+          color: Colors.white,
           size: 30,
         ),
         onPressed: () {
@@ -20,21 +20,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         'Crisis.',
         style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w900,
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 30,
           letterSpacing: 1.5,
         ),
       ),
       centerTitle: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.notifications, color: Colors.black, size: 30,),
+          icon: Icon(Icons.notifications, color: Colors.white, size: 30,),
           onPressed: () {
             // Handle alert button press
           },
         ),
       ],
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       elevation: 0, // Remove shadow/elevation
     );
   }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:untitled2/pages/loginservice.dart';
 import 'package:untitled2/pages/posts.dart';
 import 'role_selection.dart';
-import 'login_page.dart';
+import 'package:untitled2/components/bottom_navbar.dart';
+// import 'login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     if (isLoggedIn) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => PostsPage()),
+        MaterialPageRoute(builder: (context) => BottomNavBar()),
       );
     } else {
       Navigator.pushReplacement(

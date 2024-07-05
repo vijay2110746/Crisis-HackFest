@@ -18,7 +18,7 @@ class DatabaseService {
       // Navigate to the Posts screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => PostsPage()), // Replace Posts() with the actual constructor for your Posts screen
+        MaterialPageRoute(builder: (context) => VolunteerPosts()), // Replace Posts() with the actual constructor for your Posts screen
       );
       
     } catch (e) {
