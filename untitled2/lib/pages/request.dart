@@ -1,4 +1,10 @@
+
 import 'package:flutter/material.dart';
+import 'package:untitled2/pages/BoatAvailable.dart';
+import 'package:untitled2/pages/CanAvailability.dart';
+import 'package:untitled2/pages/Medical.dart';
+import 'package:untitled2/pages/Food.dart';
+import 'package:untitled2/pages/Charging.dart';
 
 
 class RequestsPage extends StatelessWidget {
@@ -26,6 +32,9 @@ class RequestsPage extends StatelessWidget {
                     // Handle Boats button press
                     _handleBoatsRequest();
                   },
+    Navigator.push(context,
+    MaterialPageRoute(builder: (context) => const BoatAskingPage()));
+    }
                 ),
                 SizedBox(width: 20.0,),
                 RequestButton(
@@ -37,6 +46,10 @@ class RequestsPage extends StatelessWidget {
                     // Handle Water Cans button press
                     _handleWaterCansRequest();
                   },
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => const CanAskingPage()));
+                    }
                 ),
               ],
             ),
@@ -52,6 +65,8 @@ class RequestsPage extends StatelessWidget {
                   onPressed: () {
                     // Handle Medical Assistance button press
                     _handleMedicalAssistanceRequest();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const MedicalAssistance()));
                   },
                 ),
                 SizedBox(width: 20.0,),
@@ -63,6 +78,8 @@ class RequestsPage extends StatelessWidget {
                   onPressed: () {
                     // Handle Food & Groceries button press
                     _handleFoodGroceriesRequest();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const FoodProvider()));
                   },
                 ),
               ],
@@ -78,6 +95,8 @@ class RequestsPage extends StatelessWidget {
                   onPressed: () {
                     // Handle Charging Stations button press
                     _handleChargingStationsRequest();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const ChargingPoint()));
                   },
                 ),
               ],

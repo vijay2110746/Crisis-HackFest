@@ -1,10 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled2/components/top_navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:untitled2/components/top_navbar.dart';
 
-// void main() {
-//   runApp(Boat());
-// }
 
 class Boat extends StatelessWidget {
   const Boat({super.key});
@@ -13,32 +11,30 @@ class Boat extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BoatAskingPage(),
+      home: MedicalAssistance(),
     );
   }
 }
 
-class BoatAskingPage extends StatefulWidget {
-  const BoatAskingPage({super.key});
+class MedicalAssistance extends StatefulWidget {
+  const MedicalAssistance({super.key});
 
   @override
-  State<BoatAskingPage> createState() => _BoatAskingPageState();
+  State<MedicalAssistance> createState() => _MedicalAssistanceState();
 }
 
-class _BoatAskingPageState extends State<BoatAskingPage> {
+class _MedicalAssistanceState extends State<MedicalAssistance> {
   var _name;
   var _address;
   var _count;
   var _phonenumber;
-  // var _prioritylevel;
   var _postcontent;
-  var _item = "boat";
+  var _item = "medical";
 
   final _namecontroller = TextEditingController();
   final _addresscontroller = TextEditingController();
   final _countcontroller = TextEditingController();
   final _phonenumbercontroller = TextEditingController();
-  // final _prioritycontroller = TextEditingController();
   final _postcontentcontroller = TextEditingController();
 
   @override
@@ -46,10 +42,10 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
     super.initState();
     _namecontroller.addListener(_updateText);
     _addresscontroller.addListener(_updateText);
-     _countcontroller.addListener(_updateText);
+    _countcontroller.addListener(_updateText);
     _phonenumbercontroller.addListener(_updateText);
-    // _prioritycontroller.addListener(_updateText);
     _postcontentcontroller.addListener(_updateText);
+    _fetchUserData();
   }
 
   void _updateText() {
@@ -58,9 +54,26 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
       _address = _addresscontroller.text;
       _count = _countcontroller.text;
       _phonenumber = _phonenumbercontroller.text;
-      // _prioritylevel = _prioritycontroller.text;
       _postcontent = _postcontentcontroller.text;
     });
+  }
+
+  void _fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var userId = user.uid;
+        var userData = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        if (userData.exists) {
+          setState(() {
+            _namecontroller.text = userData.data()?['name'] ?? '';
+            _phonenumbercontroller.text = userData.data()?['pno'] ?? '';
+          });
+        }
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
   }
 
   void _submitData() async {
@@ -70,18 +83,16 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
         _item.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('posts').add({
+      await FirebaseFirestore.instance.collection('posts-volunteer').add({
         'name': _name,
         'area': _address,
-        'headcount': _count,
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
-        'item' : _item,
+        'item': _item,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );
-      // Clear the text fields
       _namecontroller.clear();
       _addresscontroller.clear();
       _countcontroller.clear();
@@ -107,7 +118,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Availability of Boats',
+                  'Availability of Water Cans',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
@@ -121,13 +132,13 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                   child: TextFormField(
                     controller: _namecontroller,
                     decoration: InputDecoration(
-                      labelText: 'Name of the victim',
+                      labelText: 'Name of the Provider',
                       prefixIcon: Icon(Icons.man),
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Area',
                   style: TextStyle(fontSize: 18),
@@ -136,31 +147,15 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
-                    controller: _areacontroller,
+                    controller: _addresscontroller,
                     decoration: InputDecoration(
-                      labelText: 'Area of the victim',
+                      labelText: 'Area of the Medical Assistance Provider',
                       prefixIcon: Icon(Icons.place),
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
-                  'Headcount',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 10),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 450),
-                  child: TextFormField(
-                    controller: _headcountcontroller,
-                    decoration: InputDecoration(
-                      labelText: 'Number of people',
-                      prefixIcon: Icon(Icons.groups_2),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
+
                 SizedBox(height: 20),
                 Text(
                   'Phone Number',
@@ -172,29 +167,13 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                   child: TextFormField(
                     controller: _phonenumbercontroller,
                     decoration: InputDecoration(
-                      labelText: 'Mobile number of the victim',
+                      labelText: 'Mobile number of the Provider',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
-                  'Priority Level',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 10),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 450),
-                  child: TextFormField(
-                    controller: _prioritycontroller,
-                    decoration: InputDecoration(
-                      labelText: 'within 2 hours....',
-                      prefixIcon: Icon(Icons.priority_high),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
+
                 SizedBox(height: 20),
                 Text(
                   'Post-Content',
@@ -204,7 +183,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: Container(
-                    height: 150, // Specify the desired height here
+                    height: 100, // Specify the desired height here
                     child: TextFormField(
                       controller: _postcontentcontroller,
                       decoration: InputDecoration(
@@ -217,7 +196,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 10),
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -231,21 +210,13 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                       padding: const EdgeInsets.all(20.0),
                     ),
                     onPressed: _submitData,
-                    child: Text('Place Request'),
+                    child: Text('Publish Post'),
                   ),
                 ),
                 SizedBox(
                   height: 25,
                 ),
-                Center(
-                    child: Container(
-                      width: 350,
-                      child: Text(
-                        'A volunteer will contact you as soon as they ‘re available for your area',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
-                    )),
+
               ],
             ),
           ),
