@@ -20,37 +20,6 @@ class VolunteerPostsPage extends StatefulWidget {
 
 class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Map<String, dynamic>> _posts = [];
-  List<Map<String, dynamic>> _victimPosts = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _retrievePosts();
-    _retrieveVictimPosts();
-  }
-
-  Future<void> _retrievePosts() async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore.collection('posts-volunteer').get();
-      setState(() {
-        _posts = querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      });
-    } catch (e) {
-      print("Error getting volunteer documents: $e");
-    }
-  }
-
-  Future<void> _retrieveVictimPosts() async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore.collection('posts').get();
-      setState(() {
-        _victimPosts = querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      });
-    } catch (e) {
-      print("Error getting victim documents: $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +43,8 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  _buildPostsView(_posts),
-                  _buildPostsView(_victimPosts),
+                  _buildPostsView(_firestore.collection('posts-volunteer')),
+                  _buildPostsView(_firestore.collection('posts')),
                 ],
               ),
             ),
@@ -85,34 +54,67 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
     );
   }
 
-  Widget _buildPostsView(List<Map<String, dynamic>> posts) {
+  Widget _buildPostsView(CollectionReference collection) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: posts.isEmpty
-          ? Center(
+      child: StreamBuilder<QuerySnapshot>(
+        stream: collection.snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
               child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Content(
-                    // profilePicUrl: '/home/vishwaa-arumugam/Documents/GitHub/Crisis/crisis_client/lib/images/profile.jpg',
-                    name: post['name'],
-                    location: post['area'],
-                    content: post['postcontent'],
-                    priorityLevel: post['prioritylevel'],
-                    mobilenumber: post['phonenumber'],
-                    headcount: post['headcount'],
-                    item: post['item'],
-                    role: post['role'],
-                    // imageUrl: ,
-                  ),
-                );
-              },
-            ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Text('No posts available'),
+            );
+          }
+
+          // Flatten the array of posts
+          List<Map<String, dynamic>> posts = [];
+          for (var doc in snapshot.data!.docs) {
+            if (doc.exists && doc.data() != null) {
+              var data = doc.data() as Map<String, dynamic>;
+              if (data.containsKey('posts')) {
+                List<dynamic> docPosts = data['posts'];
+                for (var post in docPosts) {
+                  posts.add(post as Map<String, dynamic>);
+                }
+              }
+            }
+          }
+
+          if (posts.isEmpty) {
+            return Center(
+              child: Text('No posts available'),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              final post = posts[index];
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Content(
+                  name: post['name'],
+                  location: post['area'],
+                  content: post['postcontent'],
+                  priorityLevel: post['prioritylevel'],
+                  mobilenumber: post['phonenumber'],
+                  headcount: post['headcount'],
+                  item: post['item'],
+                  role: post['role'],
+                  id:post['uid']
+                  // imageUrl: ,
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

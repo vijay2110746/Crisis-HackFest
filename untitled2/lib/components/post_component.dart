@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Content extends StatefulWidget {
@@ -11,6 +13,7 @@ class Content extends StatefulWidget {
   final String content;
   final String? imageUrl;
   final String? role;
+  final String id; // Add victimId
 
   Content({
     this.profilePicUrl,
@@ -23,6 +26,7 @@ class Content extends StatefulWidget {
     required this.content,
     this.imageUrl,
     this.role,
+    required this.id, // Initialize victimId
   });
 
   @override
@@ -31,6 +35,64 @@ class Content extends StatefulWidget {
 
 class _ContentState extends State<Content> {
   bool isExpanded = false;
+  User? user;
+  String? userId;
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      userId = user!.uid;
+    } else {
+      print('User is not logged in');
+    }
+  }
+  Future<void> _createLink() async{
+    if (userId == null) {
+      print('id is null');
+    }
+    try {
+      await FirebaseFirestore.instance.collection('victims').doc(widget.id).set({
+        'volunteerId': userId,
+        'chatAccepted': true,
+      });
+      print('victim connected successfully');
+    }
+    catch(e){
+      print('some error happened');
+    }
+  }
+  Future<void> _createChat() async {
+    if (userId == null) {
+      print('User ID is null');
+      return;
+    }
+
+    try {
+      FirebaseFirestore.instance.collection('chats').doc(userId).set({
+        'volunteerId': userId,
+        'victimId': widget.id, // Add victimId
+        'victimName': widget.name,
+        'victimLocation': widget.location,
+        'message': widget.content,
+        'priorityLevel': widget.priorityLevel,
+        'victimMobileNumber': widget.mobilenumber,
+        'item': widget.item,
+        'headcount': widget.headcount,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      FirebaseFirestore.instance.collection('victims').doc(widget.id).set({
+        'volunteerId': userId,
+        'chatAccepted': true,
+      });
+      // Update victim's document
+
+      print('Chat created successfully');
+    } catch (e) {
+      print('Error creating chat: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +114,10 @@ class _ContentState extends State<Content> {
                   CircleAvatar(
                     radius: 25.0,
                     backgroundImage: widget.profilePicUrl != null &&
-                            widget.profilePicUrl!.isNotEmpty
+                        widget.profilePicUrl!.isNotEmpty
                         ? NetworkImage(widget.profilePicUrl!)
                         : AssetImage('assets/images/default_profile.jpg')
-                            as ImageProvider,
+                    as ImageProvider,
                   ),
                   SizedBox(width: 10.0),
                   Column(
@@ -79,8 +141,9 @@ class _ContentState extends State<Content> {
                       icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.check_circle_outline, color: Colors.green[700]),
+                      onPressed: _createChat,
+                      icon: Icon(Icons.check_circle_outline,
+                          color: Colors.green[700]),
                     ),
                   ],
                 ],

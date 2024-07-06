@@ -21,7 +21,7 @@ class _InboxPageState extends State<InboxPage> {
       String userId = user!.uid;
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
           .collection('chats')
-          .where('volunteerId', isEqualTo: userId)
+          .where('victimId', isEqualTo: userId)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -35,7 +35,7 @@ class _InboxPageState extends State<InboxPage> {
           String item = data['item'] ?? '';
 
           Message message = Message(
-            sender: data['sender'] ?? 'Unknown',
+            sender: data['volunteerId'] ?? 'Unknown',
             content: data['message'] ?? '',
             unreadCount: 0, // You might want to fetch unread count from a different field in Firestore
           );

@@ -1,8 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled2/pages/role_selection.dart';
+
+import '../pages/loginservice.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(60.0);
+
+  Future<void> signOut(BuildContext context) async{
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>RoleSelection()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +38,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.notifications, color: Colors.white, size: 30,),
-          onPressed: () {
-            // Handle alert button press
+          icon: Icon(Icons.logout_outlined, color: Colors.white, size: 30,),
+          onPressed: () async{
+            await FirebaseAuth.instance.signOut();
+            await LoginService.setLoggedIn(true);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>RoleSelection()));
           },
         ),
       ],

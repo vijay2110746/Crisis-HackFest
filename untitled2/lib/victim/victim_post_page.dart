@@ -20,24 +20,6 @@ class VictimPostsPage extends StatefulWidget {
 
 class _VictimPostsPageState extends State<VictimPostsPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Map<String, dynamic>> _posts = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _retrievePosts();
-  }
-
-  Future<void> _retrievePosts() async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore.collection('posts').get();
-      setState(() {
-        _posts = querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      });
-    } catch (e) {
-      print("Error getting documents : $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,30 +27,53 @@ class _VictimPostsPageState extends State<VictimPostsPage> {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: _posts.isEmpty
-            ? Center(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: _firestore.collection('posts').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
                 child: CircularProgressIndicator(),
-              )
-            : ListView.builder(
-                itemCount: _posts.length,
-                itemBuilder: (context, index) {
-                  final post = _posts[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Content(
-                      // profilePicUrl: '/home/vishwaa-arumugam/Documents/GitHub/Crisis/crisis_client/lib/images/profile.jpg',
-                      name: post['name'],
-                      location: post['area'],
-                      content: post['postcontent'],
-                      priorityLevel: post['prioritylevel'],
-                      mobilenumber: post['phonenumber'],
-                      headcount: post['headcount'],
-                      item: post['item'],
-                      // imageUrl: ,
-                    ),
-                  );
-                },
-              ),
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Text('No posts available'),
+              );
+            }
+
+            // Flatten the array of posts
+            List<Map<String, dynamic>> posts = [];
+            for (var doc in snapshot.data!.docs) {
+              List<dynamic> docPosts = doc['posts'];
+              for (var post in docPosts) {
+                posts.add(post as Map<String, dynamic>);
+              }
+            }
+
+            return ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                final post = posts[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Content(
+                    // profilePicUrl: '/home/vishwaa-arumugam/Documents/GitHub/Crisis/crisis_client/lib/images/profile.jpg',
+                    name: post['name'],
+                    location: post['area'],
+                    content: post['postcontent'],
+                    priorityLevel: post['prioritylevel'],
+                    mobilenumber: post['phonenumber'],
+                    headcount: post['headcount'],
+                    item: post['item'],
+                    id:post['uid']
+                    // imageUrl: ,
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

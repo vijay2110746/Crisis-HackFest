@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
-import 'package:untitled2/victim/victim_bottom_navbar.dart';
+import 'login_victim.dart';
 
 class RoleSelection extends StatelessWidget {
   const RoleSelection({Key? key});
@@ -41,8 +41,8 @@ class RoleSelection extends StatelessWidget {
                         title: "Victim",
                         onTap: () {
                           Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (context) => VictimBottomNavBar())
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPageVictim()),
                           );
                         },
                       ),

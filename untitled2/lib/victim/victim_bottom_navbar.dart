@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:untitled2/components/top_navbar.dart';
 import 'package:untitled2/victim/request.dart';
-import 'package:untitled2/victim/victim_notification.dart';
+// import 'package:untitled2/victim/victim_notification.dart';
 import 'package:untitled2/victim/victim_post_page.dart';
+import 'package:untitled2/victim/inbox_page.dart';
 
 void main(){
   runApp(Bottom());
@@ -29,7 +30,7 @@ class _VictimBottomNavBarState extends State<VictimBottomNavBar> {
 
   final List<Widget> _pages = [
     VictimPosts(),
-    VictimNotificationsScreen(),
+    InboxPage(),
     Requestscreen(),
   ];
 
@@ -77,16 +78,7 @@ class VictimPosts extends StatelessWidget {
 }
 
 
-class VictimNotificationsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(),
-      backgroundColor: Colors.white,
-      body: VictimNotification(),
-    );
-  }
-}
+
 
 class Requestscreen extends StatelessWidget {
   @override

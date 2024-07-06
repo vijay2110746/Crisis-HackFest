@@ -24,6 +24,9 @@ class BoatAskingPage extends StatefulWidget {
 }
 
 class _BoatAskingPageState extends State<BoatAskingPage> {
+  User? user;
+  String? userId;
+
   var _name;
   var _address;
   var _count;
@@ -40,6 +43,13 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
   @override
   void initState() {
     super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    if (user!=null){
+      userId = user!.uid;
+    }
+    else{
+      print('user is not logged in');
+    }
     _namecontroller.addListener(_updateText);
     _addresscontroller.addListener(_updateText);
     _countcontroller.addListener(_updateText);
@@ -83,14 +93,18 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
         _item.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('posts-volunteer').add({
+      Map<String,dynamic> newPost = {
         'name': _name,
         'area': _address,
         'headcount': _count,
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
-      });
+      };
+
+      await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({
+        'posts':FieldValue.arrayUnion([newPost])
+      },SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );

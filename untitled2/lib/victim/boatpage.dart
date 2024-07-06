@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled2/components/top_navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,6 +27,9 @@ class BoatAskingPage extends StatefulWidget {
 }
 
 class _BoatAskingPageState extends State<BoatAskingPage> {
+  User? user;
+  String? userId;
+
   var _name;
   var _area;
   var _headcount;
@@ -34,7 +38,6 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
   var _postcontent;
   var _item = "boat";
   var _role = 'victim';
-
   final _namecontroller = TextEditingController();
   final _areacontroller = TextEditingController();
   final _headcountcontroller = TextEditingController();
@@ -45,6 +48,13 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
   @override
   void initState() {
     super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    if (user!=null){
+      userId = user!.uid;
+    }
+    else{
+      print('user is not logged in');
+    }
     _namecontroller.addListener(_updateText);
     _areacontroller.addListener(_updateText);
     _headcountcontroller.addListener(_updateText);
@@ -73,7 +83,8 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         _postcontent.isNotEmpty && 
         _item.isNotEmpty && 
         _role.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('posts').add({
+      Map<String,dynamic> newPost = {
+        'uid':userId,
         'name': _name,
         'area': _area,
         'headcount': _headcount,
@@ -82,7 +93,10 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         'postcontent': _postcontent,
         'item' : _item,
         'role' : _role,
-      });
+      };
+      await FirebaseFirestore.instance.collection('posts').doc(userId).set({
+          'posts':FieldValue.arrayUnion([newPost]),
+      },SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );

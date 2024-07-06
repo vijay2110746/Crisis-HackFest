@@ -32,6 +32,33 @@ class DataService{
       print('Error creating user: $e');
     }
   }
+
+  Future<void> createVictim(String name, String email, String pno, String password) async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      User? user = userCredential.user;
+
+      if (user != null) {
+        String userId = user.uid;
+        await _firestore.collection("users-victim").doc(userId).set({
+          "name": name,
+          "email": email,
+          "pno": pno,
+          "password":password
+        });
+
+        print('User created successfully with UID: $userId');
+      } else {
+        print('User creation failed');
+      }
+    } catch (e) {
+      print('Error creating user: $e');
+    }
+  }
 }
 
 // void main(){
