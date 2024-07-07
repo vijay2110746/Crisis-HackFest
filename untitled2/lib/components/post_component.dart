@@ -14,6 +14,7 @@ class Content extends StatefulWidget {
   final String? imageUrl;
   final String? role;
   final String id; // Add victimId
+  final String id;
 
   Content({
     this.profilePicUrl,
@@ -27,6 +28,7 @@ class Content extends StatefulWidget {
     this.imageUrl,
     this.role,
     required this.id, // Initialize victimId
+    required this.id,
   });
 
   @override
@@ -71,8 +73,10 @@ class _ContentState extends State<Content> {
 
     try {
       FirebaseFirestore.instance.collection('chats').doc(userId).set({
+      await FirebaseFirestore.instance.collection('chats').add({
         'volunteerId': userId,
         'victimId': widget.id, // Add victimId
+        'victimId': widget.id,
         'victimName': widget.name,
         'victimLocation': widget.location,
         'message': widget.content,
@@ -82,7 +86,6 @@ class _ContentState extends State<Content> {
         'headcount': widget.headcount,
         'timestamp': FieldValue.serverTimestamp(),
       });
-      FirebaseFirestore.instance.collection('victims').doc(widget.id).set({
         'volunteerId': userId,
         'chatAccepted': true,
       });
@@ -115,9 +118,11 @@ class _ContentState extends State<Content> {
                     radius: 25.0,
                     backgroundImage: widget.profilePicUrl != null &&
                         widget.profilePicUrl!.isNotEmpty
+                    backgroundImage: widget.profilePicUrl != null && widget.profilePicUrl!.isNotEmpty
                         ? NetworkImage(widget.profilePicUrl!)
                         : AssetImage('assets/images/default_profile.jpg')
                     as ImageProvider,
+                        : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
                   ),
                   SizedBox(width: 10.0),
                   Column(
@@ -127,6 +132,7 @@ class _ContentState extends State<Content> {
                         widget.name,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         widget.location,
@@ -137,13 +143,9 @@ class _ContentState extends State<Content> {
                   Spacer(),
                   if (widget.role == 'victim') ...[
                     IconButton(
-                      onPressed: () {},
                       icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                     ),
                     IconButton(
-                      onPressed: _createChat,
-                      icon: Icon(Icons.check_circle_outline,
-                          color: Colors.green[700]),
                     ),
                   ],
                 ],
@@ -164,12 +166,14 @@ class _ContentState extends State<Content> {
                         style: TextStyle(
                           color: Colors.white,
                         ),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
                   SizedBox(width: 5),
                   if (widget.priorityLevel != null &&
                       widget.priorityLevel!.isNotEmpty)
+                  if (widget.priorityLevel != null && widget.priorityLevel!.isNotEmpty)
                     Container(
                       height: 30,
                       width: 85,
@@ -183,6 +187,7 @@ class _ContentState extends State<Content> {
                           style: TextStyle(
                             color: Colors.white,
                           ),
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
@@ -200,6 +205,7 @@ class _ContentState extends State<Content> {
                         style: TextStyle(
                           color: Colors.white,
                         ),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
@@ -216,6 +222,7 @@ class _ContentState extends State<Content> {
                     overflow: isExpanded
                         ? TextOverflow.visible
                         : TextOverflow.ellipsis,
+                    overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                   ),
                   InkWell(
@@ -259,9 +266,11 @@ class _ContentState extends State<Content> {
                     onPressed: () {},
                     icon: Icon(Icons.messenger_outline_rounded,
                         color: Colors.black),
+                    icon: Icon(Icons.messenger_outline_rounded, color: Colors.black),
                   ),
                 ],
               )
+              ),
             ],
           ),
         ),
