@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled2/components/tags.dart';
+import 'package:untitled2/maps/mapscreen.dart';
 import 'package:untitled2/victim/boatpage.dart';
 import 'package:untitled2/victim/chargingstation.dart';
 import 'package:untitled2/victim/foodpage.dart';
@@ -114,11 +115,18 @@ class _RequestsPageState extends State<RequestsPage> {
                         text: 'Weather Updates',
                         imagePath: 'assets/images/weather.png',
                         onTap: () {},
+                        onTap: () {
+                          
+                        },
                       ),
                       Tags(
                         text: 'Offline Maps',
                         imagePath: 'assets/images/map.png',
                         onTap: () {},
+                        onTap: () {
+                          Navigator.push(context, 
+                                        MaterialPageRoute(builder: (context) => ShowMap()));
+                        },
                       ),
                       Tags(
                         text: 'GovernmentAlert',
