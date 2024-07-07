@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled2/pages/content_state.dart';
 
 class Content extends StatefulWidget {
   final String? profilePicUrl;
@@ -13,7 +14,6 @@ class Content extends StatefulWidget {
   final String content;
   final String? imageUrl;
   final String? role;
-  final String id; // Add victimId
   final String id;
 
   Content({
@@ -27,7 +27,6 @@ class Content extends StatefulWidget {
     required this.content,
     this.imageUrl,
     this.role,
-    required this.id, // Initialize victimId
     required this.id,
   });
 
@@ -50,21 +49,7 @@ class _ContentState extends State<Content> {
       print('User is not logged in');
     }
   }
-  Future<void> _createLink() async{
-    if (userId == null) {
-      print('id is null');
-    }
-    try {
-      await FirebaseFirestore.instance.collection('victims').doc(widget.id).set({
-        'volunteerId': userId,
-        'chatAccepted': true,
-      });
-      print('victim connected successfully');
-    }
-    catch(e){
-      print('some error happened');
-    }
-  }
+
   Future<void> _createChat() async {
     if (userId == null) {
       print('User ID is null');
@@ -72,10 +57,8 @@ class _ContentState extends State<Content> {
     }
 
     try {
-      FirebaseFirestore.instance.collection('chats').doc(userId).set({
       await FirebaseFirestore.instance.collection('chats').add({
         'volunteerId': userId,
-        'victimId': widget.id, // Add victimId
         'victimId': widget.id,
         'victimName': widget.name,
         'victimLocation': widget.location,
@@ -86,15 +69,26 @@ class _ContentState extends State<Content> {
         'headcount': widget.headcount,
         'timestamp': FieldValue.serverTimestamp(),
       });
+
+      await FirebaseFirestore.instance.collection('victims').doc(widget.id).update({
         'volunteerId': userId,
         'chatAccepted': true,
       });
-      // Update victim's document
 
       print('Chat created successfully');
     } catch (e) {
       print('Error creating chat: $e');
     }
+  }
+
+  void _handleAccept() {
+    _createChat().then((_) {
+      ContentState.of(context)?.removeContent(widget.id);
+    });
+  }
+
+  void _handleReject() {
+    ContentState.of(context)?.removeContent(widget.id);
   }
 
   @override
@@ -116,12 +110,8 @@ class _ContentState extends State<Content> {
                 children: [
                   CircleAvatar(
                     radius: 25.0,
-                    backgroundImage: widget.profilePicUrl != null &&
-                        widget.profilePicUrl!.isNotEmpty
                     backgroundImage: widget.profilePicUrl != null && widget.profilePicUrl!.isNotEmpty
                         ? NetworkImage(widget.profilePicUrl!)
-                        : AssetImage('assets/images/default_profile.jpg')
-                    as ImageProvider,
                         : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
                   ),
                   SizedBox(width: 10.0),
@@ -130,8 +120,6 @@ class _ContentState extends State<Content> {
                     children: [
                       Text(
                         widget.name,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Text(
@@ -143,9 +131,12 @@ class _ContentState extends State<Content> {
                   Spacer(),
                   if (widget.role == 'victim') ...[
                     IconButton(
+                      onPressed: _handleReject,
                       icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                     ),
                     IconButton(
+                      onPressed: _handleAccept,
+                      icon: Icon(Icons.check_circle_outline, color: Colors.green[700]),
                     ),
                   ],
                 ],
@@ -163,16 +154,11 @@ class _ContentState extends State<Content> {
                     child: Center(
                       child: Text(
                         widget.mobilenumber,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
                   SizedBox(width: 5),
-                  if (widget.priorityLevel != null &&
-                      widget.priorityLevel!.isNotEmpty)
                   if (widget.priorityLevel != null && widget.priorityLevel!.isNotEmpty)
                     Container(
                       height: 30,
@@ -184,9 +170,6 @@ class _ContentState extends State<Content> {
                       child: Center(
                         child: Text(
                           widget.priorityLevel!,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -202,9 +185,6 @@ class _ContentState extends State<Content> {
                     child: Center(
                       child: Text(
                         widget.item,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -219,9 +199,6 @@ class _ContentState extends State<Content> {
                   Text(
                     widget.content,
                     maxLines: isExpanded ? null : 4,
-                    overflow: isExpanded
-                        ? TextOverflow.visible
-                        : TextOverflow.ellipsis,
                     overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                   ),
@@ -264,12 +241,9 @@ class _ContentState extends State<Content> {
                   ),
                   IconButton(
                     onPressed: () {},
-                    icon: Icon(Icons.messenger_outline_rounded,
-                        color: Colors.black),
                     icon: Icon(Icons.messenger_outline_rounded, color: Colors.black),
                   ),
                 ],
-              )
               ),
             ],
           ),
