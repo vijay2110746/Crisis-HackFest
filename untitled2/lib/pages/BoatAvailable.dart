@@ -100,6 +100,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
+        'uid':userId,
       };
 
       await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({

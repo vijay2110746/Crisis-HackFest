@@ -123,6 +123,7 @@ class _RequestsPageState extends State<RequestsPage> {
                         text: 'Offline Maps',
                         imagePath: 'assets/images/map.png',
                         onTap: () {},
+
                         onTap: () {
                           Navigator.push(context, 
                                         MaterialPageRoute(builder: (context) => ShowMap()));

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled2/pages/content_state.dart';
+import 'package:untitled2/pages/inbox_page.dart';
+// import 'package:untitled2/pages/content_state.dart';
 
 class Content extends StatefulWidget {
   final String? profilePicUrl;
@@ -15,6 +17,7 @@ class Content extends StatefulWidget {
   final String? imageUrl;
   final String? role;
   final String id;
+
 
   Content({
     this.profilePicUrl,
@@ -58,6 +61,7 @@ class _ContentState extends State<Content> {
 
     try {
       await FirebaseFirestore.instance.collection('chats').add({
+      await FirebaseFirestore.instance.collection('chats').doc(userId).set({
         'volunteerId': userId,
         'victimId': widget.id,
         'victimName': widget.name,
@@ -73,7 +77,20 @@ class _ContentState extends State<Content> {
       await FirebaseFirestore.instance.collection('victims').doc(widget.id).update({
         'volunteerId': userId,
         'chatAccepted': true,
+      await FirebaseFirestore.instance.collection('posts').doc(widget.id).update({
+        'posts': FieldValue.arrayRemove([{
+          'name': widget.name,
+          'area': widget.location,
+          'postcontent': widget.content,
+          'prioritylevel': widget.priorityLevel,
+          'phonenumber': widget.mobilenumber,
+          'headcount': widget.headcount,
+          'item': widget.item,
+          'role': widget.role,
+          'uid': widget.id
+        }])
       });
+
 
       print('Chat created successfully');
     } catch (e) {
@@ -132,10 +149,12 @@ class _ContentState extends State<Content> {
                   if (widget.role == 'victim') ...[
                     IconButton(
                       onPressed: _handleReject,
+                      onPressed: (){},
                       icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                     ),
                     IconButton(
                       onPressed: _handleAccept,
+                      onPressed: _createChat,
                       icon: Icon(Icons.check_circle_outline, color: Colors.green[700]),
                     ),
                   ],

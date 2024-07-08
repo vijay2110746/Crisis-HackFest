@@ -67,6 +67,8 @@ class _VictimPostsPageState extends State<VictimPostsPage> {
                     headcount: post['headcount'],
                     item: post['item'],
                     id:post['uid']
+                    id:post['uid'],
+
                     // imageUrl: ,
                   ),
                 );
