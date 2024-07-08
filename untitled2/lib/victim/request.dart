@@ -115,21 +115,17 @@ class _RequestsPageState extends State<RequestsPage> {
                         text: 'Weather Updates',
                         imagePath: 'assets/images/weather.png',
                         onTap: () {},
-                        onTap: () {
-                          
-                        },
                       ),
                       Tags(
                         text: 'Offline Maps',
                         imagePath: 'assets/images/map.png',
-                        onTap: () {},
                         onTap: () {
-                          Navigator.push(context, 
-                                        MaterialPageRoute(builder: (context) => ShowMap()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => ShowMap()));
                         },
                       ),
                       Tags(
-                        text: 'GovernmentAlert',
+                        text: 'Government Alert',
                         imagePath: 'assets/images/notices.png',
                         onTap: () {},
                       ),
