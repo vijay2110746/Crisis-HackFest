@@ -66,7 +66,6 @@ class _VictimPostsPageState extends State<VictimPostsPage> {
                     mobilenumber: post['phonenumber'],
                     headcount: post['headcount'],
                     item: post['item'],
-                    id:post['uid']
                     id:post['uid'],
 
                     // imageUrl: ,

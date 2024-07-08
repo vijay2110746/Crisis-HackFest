@@ -35,8 +35,6 @@ class _InboxPageState extends State<InboxPage> {
           String item = data['item'] ?? '';
 
           Message message = Message(
-            sender: data['sender'] ?? 'Unknown',
-            content: data['message'] ?? '',
             sender: data['victimName'],
             content: data['message'],
             unreadCount: 0, // You might want to fetch unread count from a different field in Firestore

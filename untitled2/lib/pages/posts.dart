@@ -107,7 +107,6 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                   headcount: post['headcount'],
                   item: post['item'],
                   role: post['role'],
-                  id:post['uid']
                   id:post['uid'],
 
                   // imageUrl: ,
