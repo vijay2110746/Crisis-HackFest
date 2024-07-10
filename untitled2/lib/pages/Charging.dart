@@ -24,6 +24,9 @@ class ChargingPoint extends StatefulWidget {
 }
 
 class _ChargingPointState extends State<ChargingPoint> {
+  User? user;
+  String? userId;
+
   var _name;
   var _address;
   var _count;
@@ -40,6 +43,13 @@ class _ChargingPointState extends State<ChargingPoint> {
   @override
   void initState() {
     super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    if (user!=null){
+      userId = user!.uid;
+    }
+    else{
+      print('user is not logged in');
+    }
     _namecontroller.addListener(_updateText);
     _addresscontroller.addListener(_updateText);
     _countcontroller.addListener(_updateText);
@@ -60,16 +70,13 @@ class _ChargingPointState extends State<ChargingPoint> {
 
   void _fetchUserData() async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        var userId = user.uid;
+
         var userData = await FirebaseFirestore.instance.collection('users').doc(userId).get();
         if (userData.exists) {
           setState(() {
             _namecontroller.text = userData.data()?['name'] ?? '';
             _phonenumbercontroller.text = userData.data()?['pno'] ?? '';
           });
-        }
       }
     } catch (e) {
       print("Error fetching user data: $e");
@@ -82,13 +89,18 @@ class _ChargingPointState extends State<ChargingPoint> {
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
         _item.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('posts-volunteer').add({
+      Map<String, dynamic> newPost = {
         'name': _name,
         'area': _address,
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
-      });
+        'uid':userId,
+      };
+
+      await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({
+        'posts':FieldValue.arrayUnion([newPost])
+      },SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );

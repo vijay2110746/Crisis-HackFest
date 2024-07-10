@@ -71,7 +71,7 @@ class _ContentState extends State<Content> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      await FirebaseFirestore.instance.collection('victims').doc(widget.id).update(
+      await FirebaseFirestore.instance.collection('victims').doc(widget.id).set(
           {
             'volunteerId': userId,
             'chatAccepted': true,
