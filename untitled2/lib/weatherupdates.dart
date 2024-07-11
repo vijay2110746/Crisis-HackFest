@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:untitled2/components/top_navbar.dart';
+import 'package:untitled2/components/weathericon.dart';
+import 'package:untitled2/components/weatherinfocontainer.dart';
 
 class WeatherUpdates extends StatelessWidget {
   const WeatherUpdates({Key? key});
@@ -24,6 +26,27 @@ class GetweatherUpdates extends StatefulWidget {
 }
 
 class _GetweatherUpdatesState extends State<GetweatherUpdates> {
+  String? selectedArea;
+
+  List<String> chennaiAreas = [
+    'Chennai',
+    'Tambaram',
+    'Guindy',
+    'Anna Nagar',
+    'Mylapore',
+    'Adyar',
+    'Nungambakkam',
+    'Egmore',
+    'Royapettah',
+    'Kodambakkam',
+    'Pallavaram',
+    'Ambattur',
+    'Porur',
+    'Teynampet',
+    'Perambur',
+    'Kotturpuram',
+  ];
+
   String condition = '';
   double feelslike = 0.0;
   int humidity = 0;
@@ -41,16 +64,18 @@ class _GetweatherUpdatesState extends State<GetweatherUpdates> {
   @override
   void initState() {
     super.initState();
-    fetchWeatherData();
+    selectedArea = chennaiAreas[0]; 
+    fetchWeatherData(selectedArea!);
   }
 
-  Future<void> fetchWeatherData() async {
-    final url = 'http://192.168.43.72:5000/get_weather_data?location=chennai';
+  Future<void> fetchWeatherData(String location) async {
+    final url = 'http://192.168.43.72:5000/get_weather_data?location=$location';
+    print(url);
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        // print(data['visibility']);
+        print(data);
         setState(() {
           condition = data['condition'];
           feelslike = data['feelslike'];
@@ -63,7 +88,6 @@ class _GetweatherUpdatesState extends State<GetweatherUpdates> {
           time = List<String>.from(data['time']);
           visibility = data['visibility'];
         });
-        // print(visibility);
       } else {
         setState(() {
           error = 'Failed to fetch weather data';
@@ -95,8 +119,31 @@ class _GetweatherUpdatesState extends State<GetweatherUpdates> {
                 children: [
                   Icon(Icons.pin_drop_outlined),
                   Text(
-                    '$location',
-                    style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+                    '$selectedArea',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 20,),
+                  DropdownButton<String>(
+                    dropdownColor: Colors.white,
+                    elevation: 20,
+                    value: selectedArea,
+                    hint: Text('Select Chennai Area'),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedArea = value;
+                      });
+                      // Fetch weather data for the selected location
+                      if (value != null) {
+                        fetchWeatherData(value);
+                        print('Selected Chennai area: $value');
+                      }
+                    },
+                    items: chennaiAreas.map((String area) {
+                      return DropdownMenuItem<String>(
+                        value: area,
+                        child: Text(area),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),

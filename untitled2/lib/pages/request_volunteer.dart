@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:untitled2/VICTIM/watercanpage.dart';
 import 'package:untitled2/victim/watercanpage.dart';
 import 'package:untitled2/components/tags.dart';
 import 'package:untitled2/maps/mapscreen.dart';

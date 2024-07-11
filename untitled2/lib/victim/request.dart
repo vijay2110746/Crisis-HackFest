@@ -115,7 +115,6 @@ class _RequestsPageState extends State<RequestsPage> {
                       Tags(
                         text: 'Weather Updates',
                         imagePath: 'assets/images/weather.png',
-                        onTap: () {},
                         onTap: () {
                           Navigator.push(context,
                                         MaterialPageRoute(builder: (context) => WeatherUpdates()));
