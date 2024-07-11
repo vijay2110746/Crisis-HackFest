@@ -18,6 +18,7 @@ class Tags extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 200,
+        width: 180,
         height: 80,
         decoration: BoxDecoration(
           color: Colors.white,

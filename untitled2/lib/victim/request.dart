@@ -6,6 +6,7 @@ import 'package:untitled2/victim/chargingstation.dart';
 import 'package:untitled2/victim/foodpage.dart';
 import 'package:untitled2/victim/medicine.dart';
 import 'package:untitled2/victim/watercanpage.dart';
+import 'package:untitled2/weatherupdates.dart';
 
 class Requests extends StatelessWidget {
   const Requests({Key? key}) : super(key: key);
@@ -115,6 +116,10 @@ class _RequestsPageState extends State<RequestsPage> {
                         text: 'Weather Updates',
                         imagePath: 'assets/images/weather.png',
                         onTap: () {},
+                        onTap: () {
+                          Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => WeatherUpdates()));
+                        },
                       ),
                       Tags(
                         text: 'Offline Maps',
