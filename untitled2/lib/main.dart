@@ -4,10 +4,9 @@ import 'firebase_options.dart';
 import 'package:untitled2/pages/splash_screen.dart';
 
 
-Future main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

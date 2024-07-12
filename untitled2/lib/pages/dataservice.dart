@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-class DataService{
+class DataService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -16,12 +15,14 @@ class DataService{
       User? user = userCredential.user;
 
       if (user != null) {
+        // Update the display name
+        await user.updateDisplayName('volunteer');
         String userId = user.uid;
         await _firestore.collection("users").doc(userId).set({
           "name": name,
           "email": email,
           "pno": pno,
-          "password":password
+          // Remove password from the Firestore document
         });
 
         print('User created successfully with UID: $userId');
@@ -43,12 +44,14 @@ class DataService{
       User? user = userCredential.user;
 
       if (user != null) {
+        // Update the display name
+        await user.updateDisplayName('victim');
         String userId = user.uid;
         await _firestore.collection("users-victim").doc(userId).set({
           "name": name,
           "email": email,
           "pno": pno,
-          "password":password
+          // Remove password from the Firestore document
         });
 
         print('User created successfully with UID: $userId');
@@ -60,8 +63,3 @@ class DataService{
     }
   }
 }
-
-// void main(){
-//   DataService e= DataService();
-//   e.create();
-// }

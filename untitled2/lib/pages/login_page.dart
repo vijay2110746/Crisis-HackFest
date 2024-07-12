@@ -1,17 +1,11 @@
-// import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-// import 'package:modernlogintute/components/my_button.dart';
 import 'package:untitled2/components/my_textfield.dart';
 import 'package:untitled2/components/square_tile.dart';
-import 'package:untitled2/pages/posts.dart';
 import 'package:untitled2/pages/dataservice.dart';
 import 'package:untitled2/components/bottom_navbar.dart';
-
-import 'loginservice.dart';
-// import 'package:untitled2/pages/authservice.dart';
-// import 'package:untitled2/pages/firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -44,8 +38,9 @@ class _LoginPageState extends State<LoginPage> {
   // Sign user in method
   void signUserIn(BuildContext context)async{
     await db.createUser(usernameController.text.trim(), emailidController.text.trim(), mobilenumberController.text.trim(), passwordController.text.trim());
-    await LoginService.setLoggedIn(true);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar()));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user', 'volunteer');
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => BottomNavBar()),(Route<dynamic> route) => false);
 
 
   }
@@ -61,10 +56,11 @@ class _LoginPageState extends State<LoginPage> {
         final AuthCredential credential = GoogleAuthProvider.credential(idToken: googleSignInAuthentication.idToken,accessToken: googleSignInAuthentication.accessToken);
 
         await FirebaseAuth.instance.signInWithCredential(credential);
-        await LoginService.setLoggedIn(true);
-        Navigator.push(
+        // await storeUserType('volunteer');
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => BottomNavBar()),
+                (Route<dynamic> route) => false
         );
       }
     }catch(e){

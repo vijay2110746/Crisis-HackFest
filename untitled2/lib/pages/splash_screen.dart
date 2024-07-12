@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:untitled2/pages/loginservice.dart';
-import 'package:untitled2/pages/posts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'role_selection.dart';
+import 'package:untitled2/victim/victim_bottom_navbar.dart';
 import 'package:untitled2/components/bottom_navbar.dart';
-// import 'login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -31,6 +31,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }).toList();
 
     _startAnimations();
+    _checkAuthState();
   }
 
   void _startAnimations() async {
@@ -41,23 +42,45 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
     // Wait for 2 seconds after the last animation
     await Future.delayed(Duration(seconds: 2));
+  }
 
+  void _checkAuthState() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    print('$user it is the user');
 
-    // Check login status and navigate accordingly
-    bool isLoggedIn = await LoginService.isLoggedIn();
-    if (isLoggedIn) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => BottomNavBar()),
-      );
+    if (user != null) {
+      final prefs = await SharedPreferences.getInstance();
+      final userType = prefs.getString('user');
+      print('user type $userType');
+
+      if (userType == 'victim') {
+        print('victim');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => VictimBottomNavBar()),
+              (Route<dynamic> route) => false,
+        );
+      } else if (userType == 'volunteer') {
+        print('volunteer');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavBar()),
+              (Route<dynamic> route) => false,
+        );
+      } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => RoleSelection()),
+              (Route<dynamic> route) => false,
+        );
+      }
     } else {
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => RoleSelection()),
+            (Route<dynamic> route) => false,
       );
     }
-    // Navigate to the next screen
-
   }
 
   @override
@@ -94,20 +117,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             );
           }).toList(),
         ),
-      ),
-    );
-  }
-}
-
-class NextScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Next Screen'),
-      ),
-      body: Center(
-        child: Text('This is the next screen'),
       ),
     );
   }

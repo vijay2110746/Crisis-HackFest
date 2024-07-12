@@ -3,14 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:untitled2/components/my_textfield.dart';
 import 'package:untitled2/components/square_tile.dart';
-import 'package:untitled2/pages/posts.dart';
 import 'package:untitled2/pages/dataservice.dart';
-import 'package:untitled2/components/bottom_navbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/victim/victim_bottom_navbar.dart';
-
-import 'loginservice.dart';
-// import 'package:untitled2/pages/authservice.dart';
-// import 'package:untitled2/pages/firestore.dart';
 
 class LoginPageVictim extends StatefulWidget {
   const LoginPageVictim({super.key});
@@ -43,8 +38,9 @@ class _LoginPageVictimState extends State<LoginPageVictim> {
   // Sign user in method
   void signUserIn(BuildContext context)async{
     await db.createVictim(usernameController.text.trim(), emailidController.text.trim(), mobilenumberController.text.trim(), passwordController.text.trim());
-    await LoginService.setLoggedIn(true);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => VictimBottomNavBar()));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user', 'victim');
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => VictimBottomNavBar()),(Route<dynamic> route) => false);
 
 
   }
@@ -60,10 +56,11 @@ class _LoginPageVictimState extends State<LoginPageVictim> {
         final AuthCredential credential = GoogleAuthProvider.credential(idToken: googleSignInAuthentication.idToken,accessToken: googleSignInAuthentication.accessToken);
 
         await FirebaseAuth.instance.signInWithCredential(credential);
-        await LoginService.setLoggedIn(true);
-        Navigator.push(
+        // await storeUserType('victim');
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => BottomNavBar()),
+          MaterialPageRoute(builder: (context) => VictimBottomNavBar()),
+                (Route<dynamic> route) => false
         );
       }
     }catch(e){

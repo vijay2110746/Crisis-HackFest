@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled2/pages/role_selection.dart';
-
-import '../pages/loginservice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -41,7 +40,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(Icons.logout_outlined, color: Colors.white, size: 30,),
           onPressed: () async{
             await FirebaseAuth.instance.signOut();
-            await LoginService.setLoggedIn(true);
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('user', 'illai');
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>RoleSelection()));
           },
         ),
