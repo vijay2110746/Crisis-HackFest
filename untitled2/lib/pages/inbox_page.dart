@@ -71,7 +71,7 @@ class _InboxPageState extends State<InboxPage> {
 
   void updateMessageReadCount(Message message) {
     setState(() {
-      message.unreadCount = 0;
+      // message.unreadCount = 0;
     });
   }
 

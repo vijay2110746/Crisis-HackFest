@@ -38,9 +38,15 @@ class CategoryWidget extends StatelessWidget {
 }
 
 class Message {
-  String sender;
-  String content;
-  int unreadCount;
+  final String sender;
+  final String content;
+  final int unreadCount;
+  final String type; // 'text' or 'image'
 
-  Message({required this.sender, required this.content, required this.unreadCount});
+  Message({
+    required this.sender,
+    required this.content,
+    required this.unreadCount,
+    this.type = 'text',
+  });
 }
