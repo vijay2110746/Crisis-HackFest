@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:untitled2/components/top_navbar.dart';
 import 'package:untitled2/components/weathericon.dart';
 import 'package:untitled2/components/weatherinfocontainer.dart';
+// import 'package:untitled2/components/weathericon.dart';
+// import 'package:untitled2/components/weatherinfocontainer.dart';
 
 class WeatherUpdates extends StatelessWidget {
   const WeatherUpdates({Key? key});
