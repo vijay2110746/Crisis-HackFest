@@ -39,7 +39,7 @@ class _ContentState extends State<Content> {
   bool isExpanded = false;
   User? user;
   String? userId;
-
+  bool isLiked = false;
   @override
   void initState() {
     super.initState();
@@ -239,8 +239,15 @@ class _ContentState extends State<Content> {
                 children: [
                   Padding(padding: EdgeInsets.only(left: 8.0)),
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.favorite_outline, color: Colors.black),
+                    onPressed: () {
+                      setState(() {
+                        isLiked = !isLiked; 
+                      });
+                    },
+                    icon: Icon(
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: isLiked ? Colors.red : Colors.black,
+                    ),
                   ),
                   Spacer(),
                   IconButton(
