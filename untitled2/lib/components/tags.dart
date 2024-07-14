@@ -17,7 +17,7 @@ class Tags extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 200,
+        width: 170,
         height: 80,
         decoration: BoxDecoration(
           color: Colors.white,
