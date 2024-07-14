@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+// import 'package:untitled2/pages/loginservice.dart';
+// import 'package:untitled2/pages/posts.dart';
+import 'role_selection.dart';
+// import 'login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'role_selection.dart';
 import 'package:untitled2/victim/victim_bottom_navbar.dart';
 import 'package:untitled2/components/bottom_navbar.dart';
 
@@ -21,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     _controllers = List<AnimationController>.generate(
       _appName.length,
           (index) => AnimationController(
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         vsync: this,
       ),
     );
@@ -31,20 +34,22 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }).toList();
 
     _startAnimations();
-    _checkAuthState();
   }
 
-  void _startAnimations() async {
+  Future<void> _startAnimations() async {
     for (int i = 0; i < _controllers.length; i++) {
-      await Future.delayed(Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 300));
       _controllers[i].forward();
     }
 
     // Wait for 2 seconds after the last animation
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Check login status and navigate accordingly
+    await _checkAuthState();
   }
 
-  void _checkAuthState() async {
+  Future<void> _checkAuthState() async {
     User? user = FirebaseAuth.instance.currentUser;
     print('$user it is the user');
 
@@ -106,17 +111,31 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               opacity: _animations[index],
               child: SlideTransition(
                 position: Tween<Offset>(
-                  begin: Offset(1, 0), // Slide in from the right
-                  end: Offset(0, 0),
+                  begin: const Offset(1, 0), // Slide in from the right
+                  end: const Offset(0, 0),
                 ).animate(_animations[index]),
                 child: Text(
                   letter,
-                  style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
                 ),
               ),
             );
           }).toList(),
         ),
+      ),
+    );
+  }
+}
+
+class NextScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Next Screen'),
+      ),
+      body: const Center(
+        child: Text('This is the next screen'),
       ),
     );
   }
