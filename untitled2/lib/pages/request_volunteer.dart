@@ -30,112 +30,128 @@ class _RequestsPageState extends State<RequestsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.only(left: 15.0, bottom: 10, right: 15.0, top: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Requests', style: TextStyle(fontSize: 15)),
-            SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Center(
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceAround,
-                    runAlignment: WrapAlignment.spaceAround,
-                    spacing: 20, // horizontal gap between tags
-                    runSpacing: 20, // vertical gap between lines of tags
-                    children: [
-                      Tags(
-                        text: 'Boats',
-                        imagePath: 'assets/images/boat.png',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const BoatAskingPage()),
-                          );
-                        },
-                      ),
-                      Tags(
-                        text: 'Foods, Groceries',
-                        imagePath: 'assets/images/foods.png',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const FoodProvider()),
-                          );
-                        },
-                      ),
-                      Tags(
-                        text: 'Medicines',
-                        imagePath: 'assets/images/medicine.png',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const MedicalAssistance()),
-                          );
-                        },
-                      ),
-                      Tags(
-                        text: 'Watercans',
-                        imagePath: 'assets/images/watercan.png',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Watercan()),
-                          );
-                        },
-                      ),
-                      Tags(
-                        text: 'Charging Station',
-                        imagePath: 'assets/images/charge.png',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const ChargingPoint()),
-                          );
-                        },
-                      ),
-                    ],
+        padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Requests', style: TextStyle(fontSize: 15)),
+              SizedBox(height: 10),
+              Wrap(
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.spaceAround,
+                spacing: 10, // horizontal gap between tags
+                runSpacing: 20, // vertical gap between lines of tags
+                children: [
+                  Tags(
+                    text: 'Boats',
+                    size: 15,
+                    imagePath: 'assets/images/boat.png',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BoatAskingPage()),
+                      );
+                    },
                   ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text('Announcements', style: TextStyle(fontSize: 15)),
-            SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Center(
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceAround,
-                    runAlignment: WrapAlignment.spaceAround,
-                    spacing: 20, // horizontal gap between tags
-                    runSpacing: 20, // vertical gap between lines of tags
-                    children: [
-                      Tags(
-                        text: 'Weather Updates',
-                        imagePath: 'assets/images/weather.png',
-                        onTap: () {},
-                      ),
-                      Tags(
-                        text: 'Offline Maps',
-                        imagePath: 'assets/images/map.png',
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => ShowMap()));
-                        },
-                      ),
-                      Tags(
-                        text: 'Government Alert',
-                        imagePath: 'assets/images/notices.png',
-                        onTap: () {},
-                      ),
-                    ],
+                  Tags(
+                    text: 'Food & Groceries',
+                    imagePath: 'assets/images/foods.png',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const FoodProvider()),
+                      );
+                    },
                   ),
-                ),
+                  Tags(
+                    text: 'Medical Assistance',
+                    imagePath: 'assets/images/medicine.png',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MedicalAssistance()),
+                      );
+                    },
+                  ),
+                  Tags(
+                    text: 'Water Cans',
+                    w: 60,
+                    h: 60,
+                    imagePath: 'assets/images/watercan.png',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Watercan()),
+                      );
+                    },
+                  ),
+                  Tags(
+                    text: 'Charging Station',
+                    imagePath: 'assets/images/charge.png',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ChargingPoint()),
+                      );
+                    },
+                  ),
+                ],
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              Text('Announcements', style: TextStyle(fontSize: 15)),
+              SizedBox(height: 10),
+              Wrap(
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.spaceAround,
+                spacing: 10, // horizontal gap between tags
+                runSpacing: 20, // vertical gap between lines of tags
+                children: [
+                  Tags(
+                    text: 'Weather Updates',
+                    imagePath: 'assets/images/weather.png',
+                    onTap: () {},
+                  ),
+                  Tags(
+                    text: 'Offline Maps',
+                    imagePath: 'assets/images/mapslogo.png',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ShowMap()),
+                      );
+                    },
+                  ),
+                  Tags(
+                    text: 'Notices',
+                    imagePath: 'assets/images/notices.png',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Text('Fundraisers', style: TextStyle(fontSize: 15)),
+              SizedBox(height: 10),
+              Wrap(
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.spaceAround,
+                spacing: 10, // horizontal gap between tags
+                runSpacing: 20, // vertical gap between lines of tags
+                children: [
+                  Tags(
+                    text: 'Donate',
+                    imagePath: 'assets/images/donate.png',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

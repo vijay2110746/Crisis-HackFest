@@ -43,14 +43,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(top: 0.0), // Adjust top padding as needed
         child: CurvedNavigationBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           color: Colors.black,
           buttonBackgroundColor: Colors.black,
           height: 60,
           items: const <Widget>[
             Center(child: Icon(Icons.home, size: 22.5, color: Colors.white)),
-            Center(child: Icon(Icons.request_page,size: 22.5,color: Colors.white,)),
-            Center(child: Icon(Icons.notifications, size: 22.5, color: Colors.white)),
+            Center(
+                child: Icon(
+              Icons.home_repair_service_sharp,
+              size: 22.5,
+              color: Colors.white,
+            )),
+            Center(
+                child:
+                    Icon(Icons.notifications, size: 22.5, color: Colors.white)),
             Center(child: Icon(Icons.person, size: 22.5, color: Colors.white)),
           ],
           onTap: (index) {
@@ -58,7 +65,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
               _currentIndex = index;
             });
           },
-          animationDuration: Duration(milliseconds: 400), // Adjust animation duration if needed
+          animationDuration: Duration(
+              milliseconds: 400), // Adjust animation duration if needed
           animationCurve: Curves.easeInOut,
         ),
       ),
@@ -77,7 +85,6 @@ class PostsPage extends StatelessWidget {
   }
 }
 
-
 class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -86,8 +93,6 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -105,7 +110,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(userId);
 
     try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
       if (userDoc.exists) {
         return userDoc.data() as Map<String, dynamic>;
       }
@@ -116,9 +124,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _editDetails(Map<String, dynamic> userData) async {
-    TextEditingController nameController = TextEditingController(text: userData['name']);
-    TextEditingController emailController = TextEditingController(text: userData['email']);
-    TextEditingController phoneController = TextEditingController(text: userData['pno']);
+    TextEditingController nameController =
+        TextEditingController(text: userData['name']);
+    TextEditingController emailController =
+        TextEditingController(text: userData['email']);
+    TextEditingController phoneController =
+        TextEditingController(text: userData['pno']);
 
     return showDialog<void>(
       context: context,
@@ -158,7 +169,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   User? user = FirebaseAuth.instance.currentUser;
                   if (user != null) {
                     String userId = user.uid;
-                    await FirebaseFirestore.instance.collection('users').doc(userId).update({
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(userId)
+                        .update({
                       'name': nameController.text,
                       'email': emailController.text,
                       'pno': phoneController.text,
@@ -292,7 +306,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.black),
                       foregroundColor: MaterialStateProperty.all(Colors.white),
-                      minimumSize: MaterialStateProperty.all<Size>(Size(40, 50)),
+                      minimumSize:
+                          MaterialStateProperty.all<Size>(Size(40, 50)),
                     ),
                   ),
                 )
@@ -316,4 +331,3 @@ class VolunteerPage extends StatelessWidget {
     );
   }
 }
-

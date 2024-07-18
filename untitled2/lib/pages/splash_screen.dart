@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 // import 'package:untitled2/pages/loginservice.dart';
 // import 'package:untitled2/pages/posts.dart';
 import 'role_selection.dart';
@@ -13,7 +14,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   final String _appName = "Crisis.";
   late List<AnimationController> _controllers;
   late List<Animation<double>> _animations;
@@ -23,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     super.initState();
     _controllers = List<AnimationController>.generate(
       _appName.length,
-          (index) => AnimationController(
+      (index) => AnimationController(
         duration: const Duration(milliseconds: 500),
         vsync: this,
       ),
@@ -63,27 +65,27 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => VictimBottomNavBar()),
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
       } else if (userType == 'volunteer') {
         print('volunteer');
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => BottomNavBar()),
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
       } else {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => RoleSelection()),
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
       }
     } else {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => RoleSelection()),
-            (Route<dynamic> route) => false,
+        (Route<dynamic> route) => false,
       );
     }
   }
@@ -116,7 +118,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 ).animate(_animations[index]),
                 child: Text(
                   letter,
-                  style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 60,
+                      fontFamily: "Inter",
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             );

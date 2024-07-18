@@ -30,10 +30,10 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
         body: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: TabBar(
-                labelColor: Colors.white,
-                indicatorColor: Colors.white,
+                labelColor: const Color.fromARGB(255, 0, 0, 0),
+                indicatorColor: const Color.fromARGB(255, 0, 0, 0),
                 tabs: [
                   Tab(text: 'Volunteer Posts'),
                   Tab(text: 'Victim Posts'),
@@ -107,7 +107,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                   headcount: post['headcount'],
                   item: post['item'],
                   role: post['role'],
-                  id:post['uid'],
+                  id: post['uid'],
 
                   // imageUrl: ,
                 ),

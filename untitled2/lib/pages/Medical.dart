@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:untitled2/components/top_navbar.dart';
 
-
 class Boat extends StatelessWidget {
   const Boat({super.key});
 
@@ -42,10 +41,9 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
   @override
   void initState() {
     super.initState();
-    if(user!=null){
+    if (user != null) {
       userId = user!.uid;
-    }
-    else{
+    } else {
       print('user is not logged in');
     }
     _namecontroller.addListener(_updateText);
@@ -71,7 +69,10 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         var userId = user.uid;
-        var userData = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        var userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
         if (userData.exists) {
           setState(() {
             _namecontroller.text = userData.data()?['name'] ?? '';
@@ -91,15 +92,20 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
         _item.isNotEmpty) {
-      Map<String,dynamic> newPost={
+      Map<String, dynamic> newPost = {
         'name': _name,
         'area': _address,
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
-        'uid':userId,
+        'uid': userId,
       };
-      await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({'posts':FieldValue.arrayUnion([newPost])},SetOptions(merge: true));
+      await FirebaseFirestore.instance
+          .collection('posts-volunteer')
+          .doc(userId)
+          .set({
+        'posts': FieldValue.arrayUnion([newPost])
+      }, SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );
@@ -128,23 +134,23 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Availability of Water Cans',
+                  'Request For Medical Assistance',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 5),
                 Text(
                   'Name',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _namecontroller,
                     decoration: InputDecoration(
-                      labelText: 'Name of the Provider',
+                      labelText: 'Enter Your Name',
                       prefixIcon: Icon(Icons.man),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
@@ -153,80 +159,130 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                   'Area',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _addresscontroller,
                     decoration: InputDecoration(
-                      labelText: 'Area of the Medical Assistance Provider',
+                      labelText: 'Enter Your Area',
                       prefixIcon: Icon(Icons.place),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Phone Number',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _phonenumbercontroller,
                     decoration: InputDecoration(
-                      labelText: 'Mobile number of the Provider',
+                      labelText: 'Enter Your Phone Number',
                       prefixIcon: Icon(Icons.phone),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
-                  'Post-Content',
+                  'Details',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: Container(
-                    height: 100, // Specify the desired height here
+                    height: 70, // Specify the desired height here
                     child: TextFormField(
                       controller: _postcontentcontroller,
                       decoration: InputDecoration(
-                        labelText: 'A brief content of this post....',
+                        labelText: 'Details of Medical Condition',
                         prefixIcon: Icon(Icons.priority_high),
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40)),
                       ),
                       maxLines:
-                      null, // Allows the text field to grow with input
+                          null, // Allows the text field to grow with input
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
+                Text(
+                  'Do You Need a Doctor',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 5),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 450),
+                  child: Container(
+                    height: 70, // Specify the desired height here
+                    child: TextFormField(
+                      controller: _postcontentcontroller,
+                      decoration: InputDecoration(
+                        labelText: 'Yes/No',
+                        prefixIcon: Icon(Icons.medical_information),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                      ),
+                      // Allows the text field to grow with input
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Medical Supplies Needed',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 5),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 450),
+                  child: Container(
+                    height: 70, // Specify the desired height here
+                    child: TextFormField(
+                      controller: _postcontentcontroller,
+                      decoration: InputDecoration(
+                        labelText: 'Provide Details if Yes',
+                        prefixIcon: Icon(Icons.local_hospital),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                      ),
+                      maxLines: null,
+                      // Allows the text field to grow with input
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 255, 208, 0),
+                      foregroundColor: Colors.black,
                       textStyle: TextStyle(
                         fontSize: 15,
                       ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)),
-                      padding: const EdgeInsets.all(20.0),
+                          borderRadius: BorderRadius.circular(50)),
+                      padding: const EdgeInsets.only(
+                          top: 15.0, bottom: 15.0, left: 20.0, right: 20.0),
                     ),
                     onPressed: _submitData,
-                    child: Text('Publish Post'),
+                    child: Text('Place Request'),
                   ),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 10,
                 ),
-
+                Center(
+                    child: Text(
+                        "A volunteer will contact you as soon as possible",
+                        style: TextStyle(fontSize: 12)))
               ],
             ),
           ),

@@ -16,7 +16,6 @@ class Content extends StatefulWidget {
   final String? role;
   final String id;
 
-
   Content({
     this.profilePicUrl,
     required this.name,
@@ -71,25 +70,31 @@ class _ContentState extends State<Content> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      await FirebaseFirestore.instance.collection('victims').doc(widget.id).set(
-          {
-            'volunteerId': userId,
-            'chatAccepted': true,
-          });
-      await FirebaseFirestore.instance.collection('posts').doc(widget.id).update({
-        'posts': FieldValue.arrayRemove([{
-          'name': widget.name,
-          'area': widget.location,
-          'postcontent': widget.content,
-          'prioritylevel': widget.priorityLevel,
-          'phonenumber': widget.mobilenumber,
-          'headcount': widget.headcount,
-          'item': widget.item,
-          'role': widget.role,
-          'uid': widget.id
-        }])
+      await FirebaseFirestore.instance
+          .collection('victims')
+          .doc(widget.id)
+          .set({
+        'volunteerId': userId,
+        'chatAccepted': true,
       });
-
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.id)
+          .update({
+        'posts': FieldValue.arrayRemove([
+          {
+            'name': widget.name,
+            'area': widget.location,
+            'postcontent': widget.content,
+            'prioritylevel': widget.priorityLevel,
+            'phonenumber': widget.mobilenumber,
+            'headcount': widget.headcount,
+            'item': widget.item,
+            'role': widget.role,
+            'uid': widget.id
+          }
+        ])
+      });
 
       print('Chat created successfully');
     } catch (e) {
@@ -97,12 +102,10 @@ class _ContentState extends State<Content> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
+      padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16.0),
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16.0),
@@ -118,9 +121,11 @@ class _ContentState extends State<Content> {
                 children: [
                   CircleAvatar(
                     radius: 25.0,
-                    backgroundImage: widget.profilePicUrl != null && widget.profilePicUrl!.isNotEmpty
+                    backgroundImage: widget.profilePicUrl != null &&
+                            widget.profilePicUrl!.isNotEmpty
                         ? NetworkImage(widget.profilePicUrl!)
-                        : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
+                        : AssetImage('assets/images/default_profile.jpg')
+                            as ImageProvider,
                   ),
                   SizedBox(width: 10.0),
                   Column(
@@ -128,7 +133,8 @@ class _ContentState extends State<Content> {
                     children: [
                       Text(
                         widget.name,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         widget.location,
@@ -139,12 +145,13 @@ class _ContentState extends State<Content> {
                   Spacer(),
                   if (widget.role == 'victim') ...[
                     IconButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                     ),
                     IconButton(
                       onPressed: _createChat,
-                      icon: Icon(Icons.check_circle_outline, color: Colors.green[700]),
+                      icon: Icon(Icons.check_circle_outline,
+                          color: Colors.green[700]),
                     ),
                   ],
                 ],
@@ -167,7 +174,8 @@ class _ContentState extends State<Content> {
                     ),
                   ),
                   SizedBox(width: 5),
-                  if (widget.priorityLevel != null && widget.priorityLevel!.isNotEmpty)
+                  if (widget.priorityLevel != null &&
+                      widget.priorityLevel!.isNotEmpty)
                     Container(
                       height: 30,
                       width: 85,
@@ -207,7 +215,9 @@ class _ContentState extends State<Content> {
                   Text(
                     widget.content,
                     maxLines: isExpanded ? null : 4,
-                    overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                    overflow: isExpanded
+                        ? TextOverflow.visible
+                        : TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                   ),
                   InkWell(
@@ -241,7 +251,7 @@ class _ContentState extends State<Content> {
                   IconButton(
                     onPressed: () {
                       setState(() {
-                        isLiked = !isLiked; 
+                        isLiked = !isLiked;
                       });
                     },
                     icon: Icon(
@@ -256,7 +266,8 @@ class _ContentState extends State<Content> {
                   ),
                   IconButton(
                     onPressed: () {},
-                    icon: Icon(Icons.messenger_outline_rounded, color: Colors.black),
+                    icon: Icon(Icons.messenger_outline_rounded,
+                        color: Colors.black),
                   ),
                 ],
               ),

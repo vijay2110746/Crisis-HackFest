@@ -76,13 +76,13 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
         'prioritylevel': _prioritylevel,
         'canquantity': _canquantity,
         'deliverytime': _deliverytime,
-        'item' : 'watercan',
-        'role' : 'victim',
+        'item': 'watercan',
+        'role': 'victim',
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );
-      
+
       _namecontroller.clear();
       _areacontroller.clear();
       _phonenumbercontroller.clear();
@@ -102,7 +102,7 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
         child: SingleChildScrollView(
           child: Center(
             child: Column(
@@ -112,63 +112,66 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                   'Request Water Cans',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Name',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _namecontroller,
                     decoration: InputDecoration(
-                      labelText: 'Name of the recipient',
-                      prefixIcon: Icon(Icons.person),
-                      border: OutlineInputBorder(),
+                      labelText: 'Enter Your Name',
+                      prefixIcon: Icon(Icons.man),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Area',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _areacontroller,
                     decoration: InputDecoration(
-                      labelText: 'Delivery area',
+                      labelText: 'Enter Your Area',
                       prefixIcon: Icon(Icons.place),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Phone Number',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _phonenumbercontroller,
                     decoration: InputDecoration(
-                      labelText: 'Contact number',
+                      labelText: 'Enter Your Phone Number',
                       prefixIcon: Icon(Icons.phone),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Priority Level',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
@@ -176,16 +179,17 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                     decoration: InputDecoration(
                       labelText: 'Priority level',
                       prefixIcon: Icon(Icons.priority_high),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Quantity of Water Cans',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
@@ -193,16 +197,17 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                     decoration: InputDecoration(
                       labelText: 'Number of water cans',
                       prefixIcon: Icon(Icons.water),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Preferred Delivery Time',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
@@ -210,34 +215,41 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                     decoration: InputDecoration(
                       labelText: 'Preferred delivery time',
                       prefixIcon: Icon(Icons.access_time),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 15),
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 255, 208, 0),
+                      foregroundColor: Colors.black,
                       textStyle: TextStyle(
                         fontSize: 15,
                       ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)),
-                      padding: const EdgeInsets.all(20.0),
+                          borderRadius: BorderRadius.circular(50)),
+                      padding: const EdgeInsets.only(
+                          top: 15.0, bottom: 15.0, left: 20.0, right: 20.0),
                     ),
                     onPressed: _submitData,
                     child: Text('Place Request'),
                   ),
                 ),
-                SizedBox(height: 25,),
-                Center(
-                  child: Container(
-                    width: 350,
-                    child: Text('A volunteer will contact you as soon as they’re available for your area', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
-                  )
+                SizedBox(
+                  height: 10,
                 ),
+                Center(
+                    child: Container(
+                  width: 350,
+                  child: Text(
+                    'A volunteer will contact you as soon as they’re available for your area',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
               ],
             ),
           ),

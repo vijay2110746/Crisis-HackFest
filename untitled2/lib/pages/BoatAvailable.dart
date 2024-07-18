@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:untitled2/components/top_navbar.dart';
 
-
 class Boat extends StatelessWidget {
   const Boat({super.key});
 
@@ -44,10 +43,9 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.currentUser;
-    if (user!=null){
+    if (user != null) {
       userId = user!.uid;
-    }
-    else{
+    } else {
       print('user is not logged in');
     }
     _namecontroller.addListener(_updateText);
@@ -73,7 +71,10 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         var userId = user.uid;
-        var userData = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        var userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
         if (userData.exists) {
           setState(() {
             _namecontroller.text = userData.data()?['name'] ?? '';
@@ -93,19 +94,22 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
         _item.isNotEmpty) {
-      Map<String,dynamic> newPost = {
+      Map<String, dynamic> newPost = {
         'name': _name,
         'area': _address,
         'headcount': _count,
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
-        'uid':userId,
+        'uid': userId,
       };
 
-      await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({
-        'posts':FieldValue.arrayUnion([newPost])
-      },SetOptions(merge: true));
+      await FirebaseFirestore.instance
+          .collection('posts-volunteer')
+          .doc(userId)
+          .set({
+        'posts': FieldValue.arrayUnion([newPost])
+      }, SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );
@@ -127,22 +131,22 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Availability of Boats',
+                  'Request a Boat',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Name',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
@@ -150,16 +154,17 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                     decoration: InputDecoration(
                       labelText: 'Name of the victim',
                       prefixIcon: Icon(Icons.man),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Area',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
@@ -167,16 +172,17 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                     decoration: InputDecoration(
                       labelText: 'Area of the Boat availability',
                       prefixIcon: Icon(Icons.place),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Headcount',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
@@ -184,16 +190,17 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                     decoration: InputDecoration(
                       labelText: 'Number of people it can carry',
                       prefixIcon: Icon(Icons.groups_2),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Phone Number',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
@@ -201,54 +208,59 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                     decoration: InputDecoration(
                       labelText: 'Mobile number of the Boat owner',
                       prefixIcon: Icon(Icons.phone),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
-                  'Post-Content',
+                  'Details',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: Container(
-                    height: 100, // Specify the desired height here
+                    height: 70, // Specify the desired height here
                     child: TextFormField(
                       controller: _postcontentcontroller,
                       decoration: InputDecoration(
-                        labelText: 'A brief content of this post....',
+                        labelText: 'A brief content of this request....',
                         prefixIcon: Icon(Icons.priority_high),
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40)),
                       ),
                       maxLines:
-                      null, // Allows the text field to grow with input
+                          null, // Allows the text field to grow with input
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 10),
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 255, 208, 0),
+                      foregroundColor: Colors.black,
                       textStyle: TextStyle(
                         fontSize: 15,
                       ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)),
-                      padding: const EdgeInsets.all(20.0),
+                          borderRadius: BorderRadius.circular(50)),
+                      padding: const EdgeInsets.only(
+                          top: 15.0, bottom: 15.0, left: 20.0, right: 20.0),
                     ),
                     onPressed: _submitData,
-                    child: Text('Publish Post'),
+                    child: Text('Place Request'),
                   ),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 10,
                 ),
-
+                Center(
+                    child: Text(
+                        "A volunteer will contact you as soon as possible",
+                        style: TextStyle(fontSize: 12)))
               ],
             ),
           ),

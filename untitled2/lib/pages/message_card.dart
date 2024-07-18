@@ -7,7 +7,12 @@ class MessageCard extends StatelessWidget {
   final Function(Message) onTap;
   final List<Message> categoryMessages;
 
-  const MessageCard({Key? key, required this.message, required this.onTap, required this.categoryMessages}) : super(key: key);
+  const MessageCard(
+      {Key? key,
+      required this.message,
+      required this.onTap,
+      required this.categoryMessages})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +44,13 @@ class MessageCard extends StatelessWidget {
           subtitle: Text(message.content),
           trailing: message.unreadCount > 0
               ? CircleAvatar(
-            radius: 12,
-            backgroundColor: Colors.yellow,
-            child: Text(
-              message.unreadCount.toString(),
-              style: TextStyle(color: Colors.black),
-            ),
-          )
+                  radius: 12,
+                  backgroundColor: Colors.yellow,
+                  child: Text(
+                    message.unreadCount.toString(),
+                    style: TextStyle(color: Colors.black),
+                  ),
+                )
               : null,
         ),
       ),
