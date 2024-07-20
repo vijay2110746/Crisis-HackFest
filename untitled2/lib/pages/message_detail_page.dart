@@ -8,10 +8,16 @@ import 'package:uuid/uuid.dart';
 import 'message_category.dart';
 
 class MessageDetailPage extends StatefulWidget {
+  final String victimId; // Add victimId as a parameter
   final Message message;
   final List<Message> categoryMessages;
 
-  const MessageDetailPage({Key? key, required this.message, required this.categoryMessages}) : super(key: key);
+  const MessageDetailPage({
+    Key? key,
+    required this.victimId,
+    required this.message,
+    required this.categoryMessages,
+  }) : super(key: key);
 
   @override
   _MessageDetailPageState createState() => _MessageDetailPageState();
@@ -20,7 +26,7 @@ class MessageDetailPage extends StatefulWidget {
 class _MessageDetailPageState extends State<MessageDetailPage> {
   List<Message> messages = [];
   TextEditingController _controller = TextEditingController();
-  String? userId;
+  String? volunteerId;
   File? imageFile;
 
   @override
@@ -30,8 +36,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      print("Got the volunteer ID");
-      userId = user.uid;
+      volunteerId = user.uid;
       _fetchMessages();
     } else {
       print('Invalid volunteer ID');
@@ -41,22 +46,29 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
   void _fetchMessages() async {
     FirebaseFirestore.instance
         .collection('chats')
-        .doc(userId)
+        .doc(volunteerId)
         .snapshots()
         .listen((documentSnapshot) {
       if (documentSnapshot.exists) {
         final data = documentSnapshot.data();
-        if (data != null && data.containsKey('messages')) {
-          setState(() {
-            messages = (data['messages'] as List<dynamic>).map((messageData) {
-              return Message(
-                sender: messageData['sender'],
-                content: messageData['content'],
-                unreadCount: 0,
-                type: messageData['type'], // assuming you have a 'type' field to differentiate text and image messages
-              );
-            }).toList();
-          });
+        if (data != null && data.containsKey('chats')) {
+          List<dynamic> chatArray = data['chats'];
+          for (var chat in chatArray) {
+            if (chat is Map<String, dynamic> && chat['victimId'] == widget.victimId) {
+              setState(() {
+                messages = (chat['messages'] as List<dynamic>).map((messageData) {
+                  return Message(
+                    sender: messageData['sender'],
+                    content: messageData['content'],
+                    unreadCount: 0,
+                    type: messageData['type'],
+                    victimId: widget.victimId, // Add victimId
+                  );
+                }).toList();
+              });
+              return;
+            }
+          }
         }
       }
     });
@@ -90,6 +102,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
       content: imageUrl,
       unreadCount: 0,
       type: 'image',
+      victimId: widget.victimId, // Add victimId
     );
 
     setState(() {
@@ -103,12 +116,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
       'type': 'image',
     };
 
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(userId)
-        .update({
-      'messages': FieldValue.arrayUnion([messageData]),
-    });
+    await _updateChatMessages(messageData);
   }
 
   void _sendTextMessage() async {
@@ -120,6 +128,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
         content: content,
         unreadCount: 0,
         type: 'text',
+        victimId: widget.victimId, // Add victimId
       );
 
       setState(() {
@@ -134,14 +143,76 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
         'type': 'text',
       };
 
-      await FirebaseFirestore.instance
-          .collection('chats')
-          .doc(userId)
-          .update({
-        'messages': FieldValue.arrayUnion([messageData]),
-      });
+      await _updateChatMessages(messageData);
     }
   }
+  Future<void> _updateChatMessages(Map<String, dynamic> messageData) async {
+    if (volunteerId != null && widget.victimId != null) {
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot = await FirebaseFirestore.instance
+          .collection('chats')
+          .doc(volunteerId)
+          .get();
+
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data = docSnapshot.data();
+        if (data != null && data.containsKey('chats')) {
+          List<dynamic> chatArray = data['chats'];
+          bool chatFound = false;
+
+          for (var chat in chatArray) {
+            if (chat is Map<String, dynamic> && chat['victimId'] == widget.victimId) {
+              chatFound = true;
+              if (chat.containsKey('messages')) {
+                List<dynamic> messages = chat['messages'];
+                messages.add(messageData);
+                chat['messages'] = messages;
+              } else {
+                chat['messages'] = [messageData];
+              }
+              break;
+            }
+          }
+
+          if (!chatFound) {
+            chatArray.add({
+              'victimId': widget.victimId,
+              'messages': [messageData]
+            });
+          }
+
+          await FirebaseFirestore.instance
+              .collection('chats')
+              .doc(volunteerId)
+              .update({'chats': chatArray});
+        } else {
+          await FirebaseFirestore.instance
+              .collection('chats')
+              .doc(volunteerId)
+              .set({
+            'chats': [
+              {
+                'victimId': widget.victimId,
+                'messages': [messageData]
+              }
+            ]
+          });
+        }
+      } else {
+        await FirebaseFirestore.instance
+            .collection('chats')
+            .doc(volunteerId)
+            .set({
+          'chats': [
+            {
+              'victimId': widget.victimId,
+              'messages': [messageData]
+            }
+          ]
+        });
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -55,16 +55,22 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
             .listen((documentSnapshot) {
           if (documentSnapshot.exists) {
             final data = documentSnapshot.data();
-            if (data != null && data.containsKey('messages')) {
+            if (data != null && data.containsKey('chats')) {
+              List<dynamic> chatArray = data['chats'];
               setState(() {
-                messages = (data['messages'] as List<dynamic>).map((messageData) {
-                  return Message(
-                    sender: messageData['sender'],
-                    content: messageData['content'],
-                    unreadCount: 0,
-                    type: messageData['type'], // assuming you have a 'type' field to differentiate text and image messages
-                  );
-                }).toList();
+                for (var chat in chatArray) {
+                  if (chat is Map<String, dynamic> && chat.containsKey('victimId') && chat['victimId'] == victimId) {
+                    messages =
+                        (chat['messages'] as List<dynamic>).map((
+                            messageData) {
+                          return Message(
+                            sender: messageData['sender'],
+                            content: messageData['content'],
+                            unreadCount: 0,
+                            type: messageData['type'], // assuming you have a 'type' field to differentiate text and image messages
+                          );
+                        }).toList();
+                  }}
               });
             }
           }
@@ -114,12 +120,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
       'type': 'image',
     };
 
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(volunteerId)
-        .update({
-      'messages': FieldValue.arrayUnion([messageData]),
-    });
+    await _updateChatMessages(messageData);
   }
 
   void _sendTextMessage() async {
@@ -145,12 +146,74 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
         'type': 'text',
       };
 
-      await FirebaseFirestore.instance
+    await _updateChatMessages(messageData);
+    }
+  }
+
+  Future<void> _updateChatMessages(Map<String, dynamic> messageData) async {
+    if (volunteerId != null && victimId != null) {
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot = await FirebaseFirestore.instance
           .collection('chats')
           .doc(volunteerId)
-          .update({
-        'messages': FieldValue.arrayUnion([messageData]),
-      });
+          .get();
+
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data = docSnapshot.data();
+        if (data != null && data.containsKey('chats')) {
+          List<dynamic> chatArray = data['chats'];
+          bool chatFound = false;
+
+          for (var chat in chatArray) {
+            if (chat is Map<String, dynamic> && chat['victimId'] == victimId) {
+              chatFound = true;
+              if (chat.containsKey('messages')) {
+                List<dynamic> messages = chat['messages'];
+                messages.add(messageData);
+                chat['messages'] = messages;
+              } else {
+                chat['messages'] = [messageData];
+              }
+              break;
+            }
+          }
+
+          if (!chatFound) {
+            chatArray.add({
+              'victimId': victimId,
+              'messages': [messageData]
+            });
+          }
+
+          await FirebaseFirestore.instance
+              .collection('chats')
+              .doc(volunteerId)
+              .update({'chats': chatArray});
+        } else {
+          await FirebaseFirestore.instance
+              .collection('chats')
+              .doc(volunteerId)
+              .set({
+            'chats': [
+              {
+                'victimId': victimId,
+                'messages': [messageData]
+              }
+            ]
+          });
+        }
+      } else {
+        await FirebaseFirestore.instance
+            .collection('chats')
+            .doc(volunteerId)
+            .set({
+          'chats': [
+            {
+              'victimId': victimId,
+              'messages': [messageData]
+            }
+          ]
+        });
+      }
     }
   }
 

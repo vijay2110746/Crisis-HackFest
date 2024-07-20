@@ -31,7 +31,7 @@ class MessageCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => MessageDetailPage(
                 message: message,
-                categoryMessages: categoryMessages,
+                categoryMessages: categoryMessages, victimId: message.victimId,
               ),
             ),
           );

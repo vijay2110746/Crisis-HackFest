@@ -41,13 +41,17 @@ class Message {
   final String sender;
   final String content;
   final int unreadCount;
-  final String type; // 'text' or 'image'
+  final String type;
+  final String victimId; // Make victimId optional
 
   Message({
     required this.sender,
     required this.content,
-    required this.unreadCount,
-    this.type = 'text',
+    this.unreadCount = 0, // Provide a default value
+    this.type = 'text', // Provide a default value
+    this.victimId="ijiji", // Optional field
   });
 }
+
+
 

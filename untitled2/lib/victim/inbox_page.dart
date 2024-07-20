@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:untitled2/components/top_navbar.dart';
 import 'message_category.dart';
 import 'message_card.dart';
-// import 'package:untitled2/components/bottom_navbar.dart';
 
 class InboxPage extends StatefulWidget {
   @override
@@ -21,7 +20,6 @@ class _InboxPageState extends State<InboxPage> {
       String userId = user!.uid;
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
           .collection('chats')
-          .where('victimId', isEqualTo: userId)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -30,26 +28,34 @@ class _InboxPageState extends State<InboxPage> {
         List<Message> medicalAssistanceMessages = [];
         List<Message> foodAndGroceriesMessages = [];
 
-        querySnapshot.docs.forEach((doc) {
+        for (var doc in querySnapshot.docs) {
           Map<String, dynamic> data = doc.data();
-          String item = data['item'] ?? '';
+          if (data.containsKey('chats')) {
+            List<dynamic> chatArray = data['chats'];
 
-          Message message = Message(
-            sender: data['volunteerId'] ?? 'Unknown',
-            content: data['message'] ?? '',
-            unreadCount: 0, // You might want to fetch unread count from a different field in Firestore
-          );
+            for (var chat in chatArray) {
+              if (chat is Map<String, dynamic> && chat.containsKey('victimId') && chat['victimId'] == userId) {
+                String item = chat['item'] ?? '';
 
-          if (item.toLowerCase() == 'water can') {
-            waterCanMessages.add(message);
-          } else if (item.toLowerCase() == 'boat') {
-            boatsMessages.add(message);
-          } else if (item.toLowerCase() == 'medical assistance') {
-            medicalAssistanceMessages.add(message);
-          } else if (item.toLowerCase() == 'food & groceries') {
-            foodAndGroceriesMessages.add(message);
+                Message message = Message(
+                  sender: chat['volunteerId'] ?? 'Unknown',
+                  content: chat['message'] ?? '',
+                  unreadCount: 0, // You might want to fetch unread count from a different field in Firestore
+                );
+
+                if (item.toLowerCase() == 'water can') {
+                  waterCanMessages.add(message);
+                } else if (item.toLowerCase() == 'boat') {
+                  boatsMessages.add(message);
+                } else if (item.toLowerCase() == 'medical assistance') {
+                  medicalAssistanceMessages.add(message);
+                } else if (item.toLowerCase() == 'food & groceries') {
+                  foodAndGroceriesMessages.add(message);
+                }
+              }
+            }
           }
-        });
+        }
 
         if (waterCanMessages.isNotEmpty) {
           messageCategories.add(MessageCategory(category: 'Request: Water Can', messages: waterCanMessages));
@@ -71,6 +77,7 @@ class _InboxPageState extends State<InboxPage> {
 
   void updateMessageReadCount(Message message) {
     setState(() {
+      // Update the message read count here if needed
     });
   }
 

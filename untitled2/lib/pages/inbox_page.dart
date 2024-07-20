@@ -24,10 +24,13 @@ class _InboxPageState extends State<InboxPage> {
           .doc(userId)
           .get();
 
+      print(docSnapshot.data());
+
       if (docSnapshot.exists) {
         Map<String,dynamic>? data=docSnapshot.data();
         if (data!=null && data.containsKey('chats')){
           List<dynamic> chatArray = data['chats'];
+          print(chatArray);
           List<Message> waterCanMessages = [];
           List<Message> boatsMessages = [];
           List<Message> medicalAssistanceMessages = [];
@@ -35,13 +38,16 @@ class _InboxPageState extends State<InboxPage> {
 
           for (var chat in chatArray){
             if (chat is Map<String,dynamic> && chat.containsKey('item')){
-              String item = data['item'] ?? '';
+              String item = chat['item'] ?? '';
+              print(item);
 
               Message message = Message(
+                victimId: chat['victimId'],
                 sender: chat['victimName'],
                 content: chat['message'],
                 unreadCount: 0, // You might want to fetch unread count from a different field in Firestore
               );
+
 
               if (item.toLowerCase() == 'water can') {
                 waterCanMessages.add(message);
