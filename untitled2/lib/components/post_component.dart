@@ -56,19 +56,26 @@ class _ContentState extends State<Content> {
       return;
     }
 
+    Map<String,dynamic> newPost = {
+      'volunteerId': userId,
+      'victimId': widget.id,
+      'victimName': widget.name,
+      'victimLocation': widget.location,
+      'message': widget.content,
+      'priorityLevel': widget.priorityLevel,
+      'victimMobileNumber': widget.mobilenumber,
+      'item': widget.item,
+      'headcount': widget.headcount,
+      'timestamp': Timestamp.now(),
+    };
+    // newPost['timestamp'] = FieldValue.serverTimestamp();
+
+
+
     try {
       await FirebaseFirestore.instance.collection('chats').doc(userId).set({
-        'volunteerId': userId,
-        'victimId': widget.id,
-        'victimName': widget.name,
-        'victimLocation': widget.location,
-        'message': widget.content,
-        'priorityLevel': widget.priorityLevel,
-        'victimMobileNumber': widget.mobilenumber,
-        'item': widget.item,
-        'headcount': widget.headcount,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+        'chats':FieldValue.arrayUnion([newPost])},SetOptions(merge: true)
+      );
 
       await FirebaseFirestore.instance
           .collection('victims')

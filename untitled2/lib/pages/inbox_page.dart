@@ -19,50 +19,60 @@ class _InboxPageState extends State<InboxPage> {
 
     if (user != null) {
       String userId = user!.uid;
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot = await FirebaseFirestore.instance
           .collection('chats')
-          .where('volunteerId', isEqualTo: userId)
+          .doc(userId)
           .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        List<Message> waterCanMessages = [];
-        List<Message> boatsMessages = [];
-        List<Message> medicalAssistanceMessages = [];
-        List<Message> foodAndGroceriesMessages = [];
+      if (docSnapshot.exists) {
+        Map<String,dynamic>? data=docSnapshot.data();
+        if (data!=null && data.containsKey('chats')){
+          List<dynamic> chatArray = data['chats'];
+          List<Message> waterCanMessages = [];
+          List<Message> boatsMessages = [];
+          List<Message> medicalAssistanceMessages = [];
+          List<Message> foodAndGroceriesMessages = [];
 
-        querySnapshot.docs.forEach((doc) {
-          Map<String, dynamic> data = doc.data();
-          String item = data['item'] ?? '';
+          for (var chat in chatArray){
+            if (chat is Map<String,dynamic> && chat.containsKey('item')){
+              String item = data['item'] ?? '';
 
-          Message message = Message(
-            sender: data['victimName'],
-            content: data['message'],
-            unreadCount: 0, // You might want to fetch unread count from a different field in Firestore
-          );
+              Message message = Message(
+                sender: chat['victimName'],
+                content: chat['message'],
+                unreadCount: 0, // You might want to fetch unread count from a different field in Firestore
+              );
 
-          if (item.toLowerCase() == 'water can') {
-            waterCanMessages.add(message);
-          } else if (item.toLowerCase() == 'boat') {
-            boatsMessages.add(message);
-          } else if (item.toLowerCase() == 'medical assistance') {
-            medicalAssistanceMessages.add(message);
-          } else if (item.toLowerCase() == 'food & groceries') {
-            foodAndGroceriesMessages.add(message);
+              if (item.toLowerCase() == 'water can') {
+                waterCanMessages.add(message);
+              } else if (item.toLowerCase() == 'boat') {
+                boatsMessages.add(message);
+              } else if (item.toLowerCase() == 'medical assistance') {
+                medicalAssistanceMessages.add(message);
+              } else if (item.toLowerCase() == 'food & groceries') {
+                foodAndGroceriesMessages.add(message);
+              }
+
+            }
           }
-        });
 
-        if (waterCanMessages.isNotEmpty) {
-          messageCategories.add(MessageCategory(category: 'Request: Water Can', messages: waterCanMessages));
+          if (waterCanMessages.isNotEmpty) {
+            messageCategories.add(MessageCategory(category: 'Request: Water Can', messages: waterCanMessages));
+          }
+          if (boatsMessages.isNotEmpty) {
+            messageCategories.add(MessageCategory(category: 'Request: Boats', messages: boatsMessages));
+          }
+          if (medicalAssistanceMessages.isNotEmpty) {
+            messageCategories.add(MessageCategory(category: 'Request: Medical Assistance', messages: medicalAssistanceMessages));
+          }
+          if (foodAndGroceriesMessages.isNotEmpty) {
+            messageCategories.add(MessageCategory(category: 'Request: Food & Groceries', messages: foodAndGroceriesMessages));
+          }
         }
-        if (boatsMessages.isNotEmpty) {
-          messageCategories.add(MessageCategory(category: 'Request: Boats', messages: boatsMessages));
-        }
-        if (medicalAssistanceMessages.isNotEmpty) {
-          messageCategories.add(MessageCategory(category: 'Request: Medical Assistance', messages: medicalAssistanceMessages));
-        }
-        if (foodAndGroceriesMessages.isNotEmpty) {
-          messageCategories.add(MessageCategory(category: 'Request: Food & Groceries', messages: foodAndGroceriesMessages));
-        }
+
+
+
+
       }
     }
 
