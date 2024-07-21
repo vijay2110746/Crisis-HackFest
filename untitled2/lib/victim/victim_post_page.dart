@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled2/components/post_component.dart'; // Make sure the import path is correct
+// import 'package:untitled2/components/post_component.dart';
+import 'package:untitled2/victim/victimpostcomponent.dart'; // Make sure the import path is correct
 
 class VictimPosts extends StatelessWidget {
   const VictimPosts({super.key});
@@ -71,6 +75,39 @@ class _VictimPostsPageState extends State<VictimPostsPage> {
                     // imageUrl: ,
                   ),
                 );
+                if(post['item'] == 'boat') {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                      // profilePicUrl: '/home/vishwaa-arumugam/Documents/GitHub/Crisis/crisis_client/lib/images/profile.jpg',
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      priorityLevel: post['prioritylevel'],
+                      mobilenumber: post['phonenumber'],
+                      headcount: post['headcount'],
+                      item: post['item'],
+                      id: post['uid'],
+                      role: post['role'],
+                    ),
+                  );
+                }
+                // } else if (post['item'] == 'meds') {
+                //   return Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: VictimContent(
+                //         name: post['name'],
+                //         mobilenumber: post['phonenumber'],
+                //         item: post['item'],
+                //         location: post['area'],
+                //         priorityLevel: post['prioritylevel'],
+                //         content: post['additionalnotes'],
+                //         quantity: post['quantity'],
+                //         medicineName: post['medicinename'],
+                //         role: post['role'],
+                //         id: post['uid']),
+                //   );
+                // }
               },
             );
           },

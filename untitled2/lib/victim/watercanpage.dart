@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled2/components/top_navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // void main() {
 //   runApp(Watercan());
@@ -26,6 +27,9 @@ class WatercanAskingPage extends StatefulWidget {
 }
 
 class _WatercanAskingPageState extends State<WatercanAskingPage> {
+  User? user;
+  String? userId;
+
   var _name;
   var _area;
   var _phonenumber;
@@ -51,6 +55,18 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
     _deliverytimecontroller.addListener(_updateText);
   }
 
+  Future<void> _initializeUser() async {
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userId = user!.uid;
+      });
+      print(userId);
+    } else {
+      print('User is not logged in');
+    }
+  }
+
   void _updateText() {
     setState(() {
       _name = _namecontroller.text;
@@ -70,6 +86,8 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
         _canquantity.isNotEmpty &&
         _deliverytime.isNotEmpty) {
       await FirebaseFirestore.instance.collection('posts').add({
+      Map<String, dynamic> newPost = {
+        'uid': userId,
         'name': _name,
         'area': _area,
         'phonenumber': _phonenumber,
@@ -79,6 +97,10 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
         'item': 'watercan',
         'role': 'victim',
       });
+      };
+      await FirebaseFirestore.instance.collection('posts').doc(userId).set({
+        'posts': FieldValue.arrayUnion([newPost]),
+      }, SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );
@@ -95,6 +117,7 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -226,6 +249,8 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 255, 208, 0),
                       foregroundColor: Colors.black,
+                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                      foregroundColor: Colors.white,
                       textStyle: TextStyle(
                         fontSize: 15,
                       ),
@@ -250,6 +275,13 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                     textAlign: TextAlign.center,
                   ),
                 )),
+                      width: 350,
+                      child: Text(
+                        'A volunteer will contact you as soon as they’re available for your area',
+                        style: TextStyle(fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
               ],
             ),
           ),
@@ -257,4 +289,5 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
       ),
     );
   }
+}
 }

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // void main() {
 //   runApp(Medicine());
 // }
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Medicine extends StatelessWidget {
   const Medicine({super.key});
@@ -26,6 +27,9 @@ class MedicineAskingPage extends StatefulWidget {
 }
 
 class _MedicineAskingPageState extends State<MedicineAskingPage> {
+  User? user;
+  String? userId;
+
   var _name;
   var _area;
   var _phonenumber;
@@ -47,6 +51,7 @@ class _MedicineAskingPageState extends State<MedicineAskingPage> {
   @override
   void initState() {
     super.initState();
+    _initializeUser();
     _namecontroller.addListener(_updateText);
     _areacontroller.addListener(_updateText);
     _phonenumbercontroller.addListener(_updateText);
@@ -54,6 +59,17 @@ class _MedicineAskingPageState extends State<MedicineAskingPage> {
     _medicinenamecontroller.addListener(_updateText);
     _quantitycontroller.addListener(_updateText);
     _additionalnotescontroller.addListener(_updateText);
+  }
+
+  Future<void> _initializeUser() async {
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userId = user!.uid;
+      });
+    } else {
+      print('User is not logged in');
+    }
   }
 
   void _updateText() {
@@ -76,7 +92,8 @@ class _MedicineAskingPageState extends State<MedicineAskingPage> {
         _medicinename.isNotEmpty &&
         _quantity.isNotEmpty &&
         _role.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('posts').add({
+      Map<String, dynamic> newPost = {
+        'uid': userId,
         'name': _name,
         'area': _area,
         'phonenumber': _phonenumber,
@@ -85,8 +102,14 @@ class _MedicineAskingPageState extends State<MedicineAskingPage> {
         'quantity': _quantity,
         'additionalnotes': _additionalnotes,
         'item': meds,
-        'role' : 'victim',
-      });
+        'role': _role,
+      };
+      await FirebaseFirestore.instance.collection('posts').doc(userId).set(
+        {
+          'posts': FieldValue.arrayUnion([newPost]),
+        },
+        SetOptions(merge: true),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );
@@ -104,6 +127,7 @@ class _MedicineAskingPageState extends State<MedicineAskingPage> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -259,10 +283,10 @@ class _MedicineAskingPageState extends State<MedicineAskingPage> {
                 ),
                 SizedBox(height: 25,),
                 Center(
-                  child: Container(
-                    width: 350,
-                    child: Text('A volunteer will contact you as soon as they’re available for your area', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
-                  )
+                    child: Container(
+                      width: 350,
+                      child: Text('A volunteer will contact you as soon as they’re available for your area', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
+                    )
                 ),
               ],
             ),

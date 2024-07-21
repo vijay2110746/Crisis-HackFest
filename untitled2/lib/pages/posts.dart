@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled2/components/post_component.dart'; // Make sure the import path is correct
+import 'package:untitled2/components/post_component.dart';
+import 'package:untitled2/victim/victimpostcomponent.dart'; // Make sure the import path is correct
 
 class VolunteerPosts extends StatelessWidget {
   const VolunteerPosts({super.key});
@@ -112,6 +114,92 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                   // imageUrl: ,
                 ),
               );
+              if(post['role'] == 'victim'){
+                if(post['item'] == 'boat'){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      priorityLevel: post['prioritylevel'],
+                      mobilenumber: post['phonenumber'],
+                      headcount: post['headcount'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'food'){
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                      name: post['name'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      location: post['area'],
+                      content: post['specialInstructions'],
+                      priorityLevel: post['prioritylevel'],
+                      foodItems: post['foodItems'],
+                      quantity: post['quantity'],
+                      role: post['role'],
+                      id: post['uid'],
+                    ),
+                  );
+                } else if (post['item'] == 'meds'){
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                        name: post['name'],
+                        mobilenumber: post['phonenumber'],
+                        item: post['item'],
+                        location: post['area'],
+                        priorityLevel: post['prioritylevel'],
+                        content: post['additionalnotes'],
+                        quantity: post['quantity'],
+                        medicineName: post['medicinename'],
+                        role: post['role'],
+                        id: post['uid'],
+                    ),
+                  );
+                }
+                else if(post['item'] == 'watercan') {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:  VictimContent(
+                      name: post['name'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      location: post['area'],
+                      role: post['role'],
+                      id: post['uid'],
+                      quantity: post['canquantity'],
+                      content: 'Water can needed in ${post['area']} please help us',
+                      priorityLevel: post['prioritylevel'],
+                    ),
+                  );
+                }
+              } else if(post['role'] == 'volunteer') {
+                print(post);
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Content(
+                    name: post['name'],
+                    location: post['area'],
+                    content: post['postcontent'],
+                    priorityLevel: post['prioritylevel'],
+                    mobilenumber: post['phonenumber'],
+                    headcount: post['headcount'],
+                    item: post['item'],
+                    role: post['role'],
+                    id: post['uid'],
+                    // imageUrl: ,
+                  ),
+                );
+              }
             },
           );
         },

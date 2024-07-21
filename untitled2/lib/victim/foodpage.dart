@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // void main() {
 //   runApp(Food());
 // }
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Food extends StatelessWidget {
   const Food({super.key});
@@ -26,6 +27,9 @@ class FoodAskingPage extends StatefulWidget {
 }
 
 class _FoodAskingPageState extends State<FoodAskingPage> {
+  User? user;
+  String? userId;
+
   var _name;
   var _area;
   var _phonenumber;
@@ -47,6 +51,7 @@ class _FoodAskingPageState extends State<FoodAskingPage> {
   @override
   void initState() {
     super.initState();
+    _initializeUser();
     _namecontroller.addListener(_updateText);
     _areacontroller.addListener(_updateText);
     _phonenumbercontroller.addListener(_updateText);
@@ -54,6 +59,17 @@ class _FoodAskingPageState extends State<FoodAskingPage> {
     _foodItemsController.addListener(_updateText);
     _quantityController.addListener(_updateText);
     _specialInstructionsController.addListener(_updateText);
+  }
+
+  Future<void> _initializeUser() async {
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userId = user!.uid;
+      });
+    } else {
+      print('User is not logged in');
+    }
   }
 
   void _updateText() {
@@ -78,7 +94,8 @@ class _FoodAskingPageState extends State<FoodAskingPage> {
         _specialInstructions.isNotEmpty &&
         _item.isNotEmpty &&
         _role.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('posts').add({
+      Map<String, dynamic> newPost = {
+        'uid': userId,
         'name': _name,
         'area': _area,
         'phonenumber': _phonenumber,
@@ -86,9 +103,12 @@ class _FoodAskingPageState extends State<FoodAskingPage> {
         'foodItems': _foodItems,
         'quantity': _quantity,
         'specialInstructions': _specialInstructions,
-        'item' : _item,
-        'role' : _role,
-      });
+        'item': _item,
+        'role': _role,
+      };
+      await FirebaseFirestore.instance.collection('posts').doc(userId).set({
+        'posts': FieldValue.arrayUnion([newPost]),
+      }, SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
       );
@@ -259,12 +279,18 @@ class _FoodAskingPageState extends State<FoodAskingPage> {
                     child: Text('Place Request'),
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 Center(
                   child: Container(
                     width: 350,
-                    child: Text('A volunteer will contact you as soon as they’re available for your area', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
-                  )
+                    child: Text(
+                      'A volunteer will contact you as soon as they’re available for your area',
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ],
             ),

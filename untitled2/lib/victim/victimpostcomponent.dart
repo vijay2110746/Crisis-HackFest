@@ -3,38 +3,44 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // import 'package:untitled2/pages/content_state.dart';
 
-class Content extends StatefulWidget {
+class VictimContent extends StatefulWidget {
   final String? profilePicUrl;
   final String name;
   final String? priorityLevel;
   final String mobilenumber;
   final String item;
-  final String headcount;
+  final String? headcount;
   final String location;
   final String content;
   final String? imageUrl;
   final String? role;
   final String id;
+  final String? foodItems;
+  final String? quantity;
+  final String? medicineName;
 
-  Content({
+  VictimContent({
     this.profilePicUrl,
     required this.name,
     this.priorityLevel,
     required this.mobilenumber,
     required this.item,
-    required this.headcount,
+    this.headcount,
     required this.location,
     required this.content,
     this.imageUrl,
     this.role,
     required this.id,
+    this.quantity,
+    this.medicineName,
+    this.foodItems,
   });
 
   @override
-  _ContentState createState() => _ContentState();
+  _VictimContentState createState() => _VictimContentState();
 }
 
-class _ContentState extends State<Content> {
+class _VictimContentState extends State<VictimContent> {
   bool isExpanded = false;
   User? user;
   String? userId;
@@ -111,14 +117,15 @@ class _ContentState extends State<Content> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.medicineName);
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16.0),
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(5.0),
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(10.0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -127,13 +134,11 @@ class _ContentState extends State<Content> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    radius: 25.0,
+                    radius: 20.0,
                     backgroundImage: widget.profilePicUrl != null &&
-                            widget.profilePicUrl!.isNotEmpty
                         widget.profilePicUrl!.isNotEmpty
                         ? NetworkImage(widget.profilePicUrl!)
                         : AssetImage('assets/images/default_profile.jpg')
-                            as ImageProvider,
                     as ImageProvider,
                   ),
                   SizedBox(width: 10.0),
@@ -143,11 +148,11 @@ class _ContentState extends State<Content> {
                       Text(
                         widget.name,
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         widget.location,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[800]),
                       ),
                     ],
                   ),
@@ -170,14 +175,15 @@ class _ContentState extends State<Content> {
                 children: [
                   Container(
                     height: 30,
-                    width: 100,
+                    // width: 100,
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(218, 159, 7, 1),
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       child: Text(
-                        widget.mobilenumber,
+                        widget.item,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -187,14 +193,15 @@ class _ContentState extends State<Content> {
                       widget.priorityLevel!.isNotEmpty)
                     Container(
                       height: 30,
-                      width: 85,
+                      // width: 85,
                       decoration: BoxDecoration(
-                        color: Color.fromRGBO(166, 83, 230, 1),
+                        color: Colors.green[500],
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Text(
-                          widget.priorityLevel!,
+                          "Open",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -204,12 +211,12 @@ class _ContentState extends State<Content> {
                     height: 30,
                     width: 60,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(7, 218, 56, 1),
+                      color: Colors.purple[400],
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Center(
                       child: Text(
-                        widget.item,
+                        widget.role!,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -222,13 +229,59 @@ class _ContentState extends State<Content> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.content,
+                    "PriorityLevel : " + widget.priorityLevel!,
                     maxLines: isExpanded ? null : 4,
                     overflow: isExpanded
                         ? TextOverflow.visible
                         : TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                   ),
+                  SizedBox(height: 10,),
+                  Text(
+                    "MobileNumber : " + widget.mobilenumber,
+                    maxLines: isExpanded ? null : 4,
+                    overflow: isExpanded
+                        ? TextOverflow.visible
+                        : TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ),
+                  if (widget.quantity != null && widget.quantity!.isNotEmpty) ...[
+                    SizedBox(height: 10),
+                    Text(
+                      'Quantity : ${widget.quantity}',
+                      maxLines: isExpanded ? null : 4,
+                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
+                  if (widget.foodItems != null && widget.foodItems!.isNotEmpty) ...[
+                    SizedBox(height: 10),
+                    Text(
+                      'FoodItems : ${widget.foodItems}',
+                      maxLines: isExpanded ? null : 4,
+                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
+                  if(widget.medicineName != null && widget.medicineName!.isNotEmpty) ...[
+                    SizedBox(height: 10),
+                    Text(
+                      'Medicine Name : ${widget.medicineName}',
+                      maxLines: isExpanded ? null : 4,
+                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
+                  SizedBox(height: 10,),
+                  Text(
+                    "Content : " + widget.content,
+                    maxLines: isExpanded ? null : 4,
+                    overflow: isExpanded
+                        ? TextOverflow.visible
+                        : TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ),
+
                   InkWell(
                     onTap: () {
                       setState(() {
@@ -242,7 +295,7 @@ class _ContentState extends State<Content> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty)
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
@@ -286,5 +339,4 @@ class _ContentState extends State<Content> {
       ),
     );
   }
-}
 }
