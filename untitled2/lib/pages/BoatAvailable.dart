@@ -139,7 +139,6 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Request a Boat',
                   'Posting for Boat availability',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
@@ -154,7 +153,6 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                   child: TextFormField(
                     controller: _namecontroller,
                     decoration: InputDecoration(
-                      labelText: 'Name of the victim',
                       labelText: 'Name of the volunteer',
                       prefixIcon: Icon(Icons.man),
                       border: OutlineInputBorder(
@@ -235,7 +233,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                             borderRadius: BorderRadius.circular(40)),
                       ),
                       maxLines:
-                          null, // Allows the text field to grow with input
+                      null, // Allows the text field to grow with input
                     ),
                   ),
                 ),
@@ -254,7 +252,6 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                           top: 15.0, bottom: 15.0, left: 20.0, right: 20.0),
                     ),
                     onPressed: _submitData,
-                    child: Text('Place Request'),
                     child: Text('Provide Assistance'),
                   ),
                 ),

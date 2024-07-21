@@ -31,7 +31,6 @@ class _FoodProviderState extends State<FoodProvider> {
   var _count;
   var _phonenumber;
   var _postcontent;
-  var _item = "can";
   var _item = "food";
 
   final _namecontroller = TextEditingController();
@@ -98,7 +97,6 @@ class _FoodProviderState extends State<FoodProvider> {
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
-        'uid': userId
         'uid': userId,
         'role' : 'volunteer',
       };
@@ -225,14 +223,13 @@ class _FoodProviderState extends State<FoodProvider> {
                       controller: _postcontentcontroller,
                       decoration: InputDecoration(
                         labelText:
-                            '(Veg/Non-Veg) + Extra Instructions (if any)',
-                        prefixIcon: Icon(Icons.priority_high),
+                        '(Veg/Non-Veg) + Extra Instructions (if any)',
                         prefixIcon: Icon(Icons.fastfood_outlined),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(40)),
                       ),
                       maxLines:
-                          null, // Allows the text field to grow with input
+                      null, // Allows the text field to grow with input
                     ),
                   ),
                 ),

@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:untitled2/components/top_navbar.dart';
 
-
-class Boat extends StatelessWidget {
-  const Boat({super.key});
 class Charging extends StatelessWidget {
   const Charging({super.key});
 
@@ -31,16 +28,13 @@ class _ChargingPointState extends State<ChargingPoint> {
 
   var _name;
   var _address;
-  var _count;
   var _landmark;
   var _phonenumber;
   var _postcontent;
-  var _item = "chargingpoint";
   var _item = "charge";
 
   final _namecontroller = TextEditingController();
   final _addresscontroller = TextEditingController();
-  final _countcontroller = TextEditingController();
   final _landmarkcontroller = TextEditingController();
   final _phonenumbercontroller = TextEditingController();
   final _postcontentcontroller = TextEditingController();
@@ -49,17 +43,13 @@ class _ChargingPointState extends State<ChargingPoint> {
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.currentUser;
-    if (user!=null){
     if (user != null) {
       userId = user!.uid;
-    }
-    else{
     } else {
       print('user is not logged in');
     }
     _namecontroller.addListener(_updateText);
     _addresscontroller.addListener(_updateText);
-    _countcontroller.addListener(_updateText);
     _landmarkcontroller.addListener(_updateText);
     _phonenumbercontroller.addListener(_updateText);
     _postcontentcontroller.addListener(_updateText);
@@ -70,7 +60,6 @@ class _ChargingPointState extends State<ChargingPoint> {
     setState(() {
       _name = _namecontroller.text;
       _address = _addresscontroller.text;
-      _count = _countcontroller.text;
       _landmark = _landmarkcontroller.text;
       _phonenumber = _phonenumbercontroller.text;
       _postcontent = _postcontentcontroller.text;
@@ -79,8 +68,6 @@ class _ChargingPointState extends State<ChargingPoint> {
 
   void _fetchUserData() async {
     try {
-
-        var userData = await FirebaseFirestore.instance.collection('users').doc(userId).get();
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         var userId = user.uid;
@@ -114,14 +101,10 @@ class _ChargingPointState extends State<ChargingPoint> {
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
-        'uid':userId,
         'uid': userId,
         'role' : 'volunteer',
       };
 
-      await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({
-        'posts':FieldValue.arrayUnion([newPost])
-      },SetOptions(merge: true));
       await FirebaseFirestore.instance
           .collection('posts-volunteer')
           .doc(userId)
@@ -133,7 +116,6 @@ class _ChargingPointState extends State<ChargingPoint> {
       );
       _namecontroller.clear();
       _addresscontroller.clear();
-      _countcontroller.clear();
       // _countcontroller.clear();
       _phonenumbercontroller.clear();
       _postcontentcontroller.clear();
@@ -150,7 +132,6 @@ class _ChargingPointState extends State<ChargingPoint> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(15),
         padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
         child: SingleChildScrollView(
           child: Center(
@@ -158,59 +139,47 @@ class _ChargingPointState extends State<ChargingPoint> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Availability of Charging Points',
                   'Posting for Charging-Station availability',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 20),
                 SizedBox(height: 10),
                 Text(
                   'Name',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
                 SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _namecontroller,
                     decoration: InputDecoration(
-                      labelText: 'Name of the Provider',
                       labelText: 'Name of the volunteer',
                       prefixIcon: Icon(Icons.man),
-                      border: OutlineInputBorder(),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
                 SizedBox(height: 10),
                 Text(
                   'Area',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
                 SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _addresscontroller,
                     decoration: InputDecoration(
-                      labelText: 'Area of the Provider',
                       labelText: 'Area of the charging place',
                       prefixIcon: Icon(Icons.place),
-                      border: OutlineInputBorder(),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-
-                SizedBox(height: 20),
                 SizedBox(height: 10),
                 Text(
-                  'Phone Number',
                   'Landmark',
                   style: TextStyle(fontSize: 18),
                 ),
@@ -238,37 +207,28 @@ class _ChargingPointState extends State<ChargingPoint> {
                   child: TextFormField(
                     controller: _phonenumbercontroller,
                     decoration: InputDecoration(
-                      labelText: 'Mobile number of the Food Provider',
                       labelText: 'Mobile number of the Boat owner',
                       prefixIcon: Icon(Icons.phone),
-                      border: OutlineInputBorder(),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
-
-                SizedBox(height: 20),
                 SizedBox(height: 10),
                 Text(
-                  'Post-Content',
                   'Details',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 10),
                 SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: Container(
-                    height: 100, // Specify the desired height here
                     height: 70, // Specify the desired height here
                     child: TextFormField(
                       controller: _postcontentcontroller,
                       decoration: InputDecoration(
-                        labelText: 'A brief content of this post....',
                         labelText: 'A brief content of this request....',
                         prefixIcon: Icon(Icons.priority_high),
-                        border: OutlineInputBorder(),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(40)),
                       ),
@@ -281,30 +241,23 @@ class _ChargingPointState extends State<ChargingPoint> {
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
                       backgroundColor: Color.fromARGB(255, 255, 208, 0),
                       foregroundColor: Colors.black,
                       textStyle: TextStyle(
                         fontSize: 15,
                       ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)),
-                      padding: const EdgeInsets.all(20.0),
                           borderRadius: BorderRadius.circular(50)),
                       padding: const EdgeInsets.only(
                           top: 15.0, bottom: 15.0, left: 20.0, right: 20.0),
                     ),
                     onPressed: _submitData,
-                    child: Text('Publish Post'),
                     child: Text('Provide Assistance'),
                   ),
                 ),
                 SizedBox(
-                  height: 25,
                   height: 10,
                 ),
-
                 Center(
                     child: Text(
                         "A volunteer will contact you as soon as possible",

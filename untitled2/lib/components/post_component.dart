@@ -9,7 +9,6 @@ class Content extends StatefulWidget {
   final String? priorityLevel;
   final String mobilenumber;
   final String item;
-  final String headcount;
   final String? headcount;
   final String location;
   final String content;
@@ -24,7 +23,6 @@ class Content extends StatefulWidget {
     this.priorityLevel,
     required this.mobilenumber,
     required this.item,
-    required this.headcount,
     this.headcount,
     required this.location,
     required this.content,
@@ -121,7 +119,6 @@ class _ContentState extends State<Content> {
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
             color: Colors.grey[100],
             borderRadius: BorderRadius.circular(5.0),
           ),
@@ -132,14 +129,11 @@ class _ContentState extends State<Content> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    radius: 25.0,
                     radius: 20.0,
                     backgroundImage: widget.profilePicUrl != null &&
-                            widget.profilePicUrl!.isNotEmpty
                         widget.profilePicUrl!.isNotEmpty
                         ? NetworkImage(widget.profilePicUrl!)
                         : AssetImage('assets/images/default_profile.jpg')
-                            as ImageProvider,
                     as ImageProvider,
                   ),
                   SizedBox(width: 10.0),
@@ -176,13 +170,11 @@ class _ContentState extends State<Content> {
                 children: [
                   Container(
                     height: 30,
-                    width: 100,
                     // width: 100,
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(218, 159, 7, 1),
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       child: Text(
@@ -213,7 +205,6 @@ class _ContentState extends State<Content> {
                     height: 30,
                     width: 60,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(7, 218, 56, 1),
                       color: Colors.green[500],
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -337,5 +328,4 @@ class _ContentState extends State<Content> {
       ),
     );
   }
-}
 }

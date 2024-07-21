@@ -44,17 +44,11 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
   @override
   void initState() {
     super.initState();
-    if (user != null) {
-      userId = user!.uid;
-    } else {
-      print('user is not logged in');
-    }
     _namecontroller.addListener(_updateText);
     _addresscontroller.addListener(_updateText);
     _countcontroller.addListener(_updateText);
     _phonenumbercontroller.addListener(_updateText);
     _postcontentcontroller.addListener(_updateText);
-    _fetchUserData();
     _medicalSuppliesController.addListener(_updateText);
     _initializeUser();
   }
@@ -109,7 +103,6 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
         _count.isNotEmpty &&
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
-        _item.isNotEmpty) {
         _item.isNotEmpty &&
         _doctorNeed.isNotEmpty &&
         _medicalSupplies.isNotEmpty) {
@@ -124,11 +117,6 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
         'item': _item,
         'uid': userId,
       };
-      await FirebaseFirestore.instance
-          .collection('posts-volunteer')
-          .doc(userId)
-          .set({
-        'posts': FieldValue.arrayUnion([newPost])
       await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({
         'posts': FieldValue.arrayUnion([newPost]),
       }, SetOptions(merge: true));
@@ -164,7 +152,6 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Request For Medical Assistance',
                   'Posting For Medical Assistance',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
@@ -239,8 +226,6 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(40)),
                       ),
-                      maxLines:
-                          null, // Allows the text field to grow with input
                       maxLines: null, // Allows the text field to grow with input
                     ),
                   ),
@@ -253,15 +238,6 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                 SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
-                  child: Container(
-                    height: 70, // Specify the desired height here
-                    child: TextFormField(
-                      controller: _postcontentcontroller,
-                      decoration: InputDecoration(
-                        labelText: 'Yes/No',
-                        prefixIcon: Icon(Icons.medical_information),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(40)),
                   child: DropdownButtonFormField<String>(
                     value: _doctorNeed,
                     items: [
@@ -269,7 +245,6 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                         value: 'Yes',
                         child: Text('Yes'),
                       ),
-                      // Allows the text field to grow with input
                       DropdownMenuItem(
                         value: 'No',
                         child: Text('No'),
@@ -299,7 +274,6 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                   child: Container(
                     height: 70, // Specify the desired height here
                     child: TextFormField(
-                      controller: _postcontentcontroller,
                       controller: _medicalSuppliesController,
                       decoration: InputDecoration(
                         labelText: 'Provide Details if Yes',
@@ -344,5 +318,4 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
       ),
     );
   }
-}
 }

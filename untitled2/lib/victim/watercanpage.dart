@@ -3,9 +3,6 @@ import 'package:untitled2/components/top_navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// void main() {
-//   runApp(Watercan());
-// }
 
 class Watercan extends StatelessWidget {
   const Watercan({super.key});
@@ -85,7 +82,6 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
         _prioritylevel.isNotEmpty &&
         _canquantity.isNotEmpty &&
         _deliverytime.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('posts').add({
       Map<String, dynamic> newPost = {
         'uid': userId,
         'name': _name,
@@ -96,7 +92,6 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
         'deliverytime': _deliverytime,
         'item': 'watercan',
         'role': 'victim',
-      });
       };
       await FirebaseFirestore.instance.collection('posts').doc(userId).set({
         'posts': FieldValue.arrayUnion([newPost]),
@@ -247,8 +242,6 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 255, 208, 0),
-                      foregroundColor: Colors.black,
                       backgroundColor: Color.fromARGB(255, 0, 0, 0),
                       foregroundColor: Colors.white,
                       textStyle: TextStyle(
@@ -268,13 +261,6 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
                 ),
                 Center(
                     child: Container(
-                  width: 350,
-                  child: Text(
-                    'A volunteer will contact you as soon as they’re available for your area',
-                    style: TextStyle(fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
                       width: 350,
                       child: Text(
                         'A volunteer will contact you as soon as they’re available for your area',
@@ -289,5 +275,4 @@ class _WatercanAskingPageState extends State<WatercanAskingPage> {
       ),
     );
   }
-}
 }
