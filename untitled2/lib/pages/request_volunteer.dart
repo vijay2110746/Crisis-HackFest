@@ -87,6 +87,7 @@ class _RequestsPageState extends State<RequestsPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const Watercan()),
+                            builder: (context) => const CanAskingPage()),
                       );
                     },
                   ),

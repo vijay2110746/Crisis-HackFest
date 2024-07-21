@@ -32,6 +32,7 @@ class _FoodProviderState extends State<FoodProvider> {
   var _phonenumber;
   var _postcontent;
   var _item = "can";
+  var _item = "food";
 
   final _namecontroller = TextEditingController();
   final _addresscontroller = TextEditingController();
@@ -98,6 +99,8 @@ class _FoodProviderState extends State<FoodProvider> {
         'postcontent': _postcontent,
         'item': _item,
         'uid': userId
+        'uid': userId,
+        'role' : 'volunteer',
       };
       await FirebaseFirestore.instance
           .collection('posts-volunteer')
@@ -224,6 +227,7 @@ class _FoodProviderState extends State<FoodProvider> {
                         labelText:
                             '(Veg/Non-Veg) + Extra Instructions (if any)',
                         prefixIcon: Icon(Icons.priority_high),
+                        prefixIcon: Icon(Icons.fastfood_outlined),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(40)),
                       ),

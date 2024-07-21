@@ -10,10 +10,12 @@ class Content extends StatefulWidget {
   final String mobilenumber;
   final String item;
   final String headcount;
+  final String? headcount;
   final String location;
   final String content;
   final String? imageUrl;
   final String? role;
+  final String? landmark;
   final String id;
 
   Content({
@@ -23,9 +25,11 @@ class Content extends StatefulWidget {
     required this.mobilenumber,
     required this.item,
     required this.headcount,
+    this.headcount,
     required this.location,
     required this.content,
     this.imageUrl,
+    this.landmark,
     this.role,
     required this.id,
   });
@@ -118,6 +122,7 @@ class _ContentState extends State<Content> {
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: Colors.grey[200],
+            color: Colors.grey[100],
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: Column(
@@ -128,6 +133,7 @@ class _ContentState extends State<Content> {
                 children: [
                   CircleAvatar(
                     radius: 25.0,
+                    radius: 20.0,
                     backgroundImage: widget.profilePicUrl != null &&
                             widget.profilePicUrl!.isNotEmpty
                         widget.profilePicUrl!.isNotEmpty
@@ -171,13 +177,16 @@ class _ContentState extends State<Content> {
                   Container(
                     height: 30,
                     width: 100,
+                    // width: 100,
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(218, 159, 7, 1),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       child: Text(
-                        widget.mobilenumber,
+                        widget.role!,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -205,6 +214,7 @@ class _ContentState extends State<Content> {
                     width: 60,
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(7, 218, 56, 1),
+                      color: Colors.green[500],
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Center(
@@ -221,6 +231,47 @@ class _ContentState extends State<Content> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    'Mobile Number : ' + widget.mobilenumber,
+                    maxLines: isExpanded ? null : 4,
+                    overflow: isExpanded
+                        ? TextOverflow.visible
+                        : TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ),
+                  SizedBox(height: 10,),
+                  if (widget.landmark != null) ...[
+                    Text(
+                      'Landmark of the charging station : ' + widget.landmark!,
+                      maxLines: isExpanded ? null : 4,
+                      overflow: isExpanded
+                          ? TextOverflow.visible
+                          : TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                    SizedBox(height: 10,),
+                  ],
+                  if(widget.item == 'boat') ...[
+                    Text(
+                      'My Boat can carry ${widget.headcount} people',
+                      maxLines: isExpanded ? null : 4,
+                      overflow: isExpanded
+                          ? TextOverflow.visible
+                          : TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
+                  if(widget.item == 'food') ...[
+                    Text(
+                      'I have food for ${widget.headcount} people',
+                      maxLines: isExpanded ? null : 4,
+                      overflow: isExpanded
+                          ? TextOverflow.visible
+                          : TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
+                  SizedBox(height: 10,),
                   Text(
                     widget.content,
                     maxLines: isExpanded ? null : 4,

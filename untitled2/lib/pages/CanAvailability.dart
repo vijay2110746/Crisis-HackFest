@@ -29,6 +29,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
   var _name;
   var _address;
   var _count;
+  // var _count;
   var _phonenumber;
   var _postcontent;
   var _item = "can";
@@ -36,6 +37,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
   final _namecontroller = TextEditingController();
   final _addresscontroller = TextEditingController();
   final _countcontroller = TextEditingController();
+  // final _countcontroller = TextEditingController();
   final _phonenumbercontroller = TextEditingController();
   final _postcontentcontroller = TextEditingController();
 
@@ -51,6 +53,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
     _namecontroller.addListener(_updateText);
     _addresscontroller.addListener(_updateText);
     _countcontroller.addListener(_updateText);
+    // _countcontroller.addListener(_updateText);
     _phonenumbercontroller.addListener(_updateText);
     _postcontentcontroller.addListener(_updateText);
     _fetchUserData();
@@ -61,6 +64,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
       _name = _namecontroller.text;
       _address = _addresscontroller.text;
       _count = _countcontroller.text;
+      // _count = _countcontroller.text;
       _phonenumber = _phonenumbercontroller.text;
       _postcontent = _postcontentcontroller.text;
     });
@@ -77,6 +81,19 @@ class _CanAskingPageState extends State<CanAskingPage> {
           _namecontroller.text = userData.data()?['name'] ?? '';
           _phonenumbercontroller.text = userData.data()?['pno'] ?? '';
         });
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var userId = user.uid;
+        var userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+        if (userData.exists) {
+          setState(() {
+            _namecontroller.text = userData.data()?['name'] ?? '';
+            _phonenumbercontroller.text = userData.data()?['pno'] ?? '';
+          });
+        }
       }
     } catch (e) {
       print("Error fetching user data: $e");
@@ -87,6 +104,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
     if (_name.isNotEmpty &&
         _address.isNotEmpty &&
         _count.isNotEmpty &&
+        // _count.isNotEmpty &&
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
         _item.isNotEmpty) {
@@ -94,11 +112,14 @@ class _CanAskingPageState extends State<CanAskingPage> {
         'name': _name,
         'area': _address,
         'headcount': _count,
+        // 'headcount': _count,
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
         'item': _item,
         'uid': userId,
+        'role' : 'volunteer',
       };
+
       await FirebaseFirestore.instance
           .collection('posts-volunteer')
           .doc(userId)
@@ -111,6 +132,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
       _namecontroller.clear();
       _addresscontroller.clear();
       _countcontroller.clear();
+      // _countcontroller.clear();
       _phonenumbercontroller.clear();
       _postcontentcontroller.clear();
     } else {
@@ -127,6 +149,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
       appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
         child: SingleChildScrollView(
           child: Center(
             child: Column(
@@ -134,39 +157,50 @@ class _CanAskingPageState extends State<CanAskingPage> {
               children: [
                 Text(
                   'Availability of Water Cans',
+                  'Posting for Water-Can availability',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Name',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _namecontroller,
                     decoration: InputDecoration(
                       labelText: 'Name of the Provider',
+                      labelText: 'Name of the volunteer',
                       prefixIcon: Icon(Icons.man),
                       border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
                 SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Area',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _addresscontroller,
                     decoration: InputDecoration(
                       labelText: 'Area of the Can Provider',
+                      labelText: 'Area of the Can availability',
                       prefixIcon: Icon(Icons.place),
                       border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
@@ -193,36 +227,48 @@ class _CanAskingPageState extends State<CanAskingPage> {
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: TextFormField(
                     controller: _phonenumbercontroller,
                     decoration: InputDecoration(
                       labelText: 'Mobile number of the Can Provider',
+                      labelText: 'Mobile number of the Boat owner',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
                 SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Post-Content',
+                  'Details',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
+                SizedBox(height: 5),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 450),
                   child: Container(
                     height: 100, // Specify the desired height here
+                    height: 70, // Specify the desired height here
                     child: TextFormField(
                       controller: _postcontentcontroller,
                       decoration: InputDecoration(
                         labelText: 'A brief content of this post....',
+                        labelText: 'A brief content of this request....',
                         prefixIcon: Icon(Icons.priority_high),
                         border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40)),
                       ),
                       maxLines:
                           null, // Allows the text field to grow with input
+                      null, // Allows the text field to grow with input
                     ),
                   ),
                 ),
@@ -232,20 +278,31 @@ class _CanAskingPageState extends State<CanAskingPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 255, 208, 0),
+                      foregroundColor: Colors.black,
                       textStyle: TextStyle(
                         fontSize: 15,
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25)),
                       padding: const EdgeInsets.all(20.0),
+                          borderRadius: BorderRadius.circular(50)),
+                      padding: const EdgeInsets.only(
+                          top: 15.0, bottom: 15.0, left: 20.0, right: 20.0),
                     ),
                     onPressed: _submitData,
                     child: Text('Publish Post'),
+                    child: Text('Provide Assistance'),
                   ),
                 ),
                 SizedBox(
                   height: 25,
+                  height: 10,
                 ),
+                Center(
+                    child: Text(
+                        "A volunteer will contact you as soon as possible",
+                        style: TextStyle(fontSize: 12)))
               ],
             ),
           ),

@@ -199,6 +199,70 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                     // imageUrl: ,
                   ),
                 );
+                if(post['item'] == 'boat'){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      priorityLevel: post['prioritylevel'],
+                      mobilenumber: post['phonenumber'],
+                      headcount: post['headcount'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'food') {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      priorityLevel: post['prioritylevel'],
+                      mobilenumber: post['phonenumber'],
+                      headcount: post['headcount'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      // imageUrl: ,
+                    ),
+                  );
+                }  else if (post['item'] == 'can') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'charge') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      landmark: post['landmark'],
+                      content: post['postcontent'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      // imageUrl: ,
+                    ),
+                  );
+                }
               }
             },
           );

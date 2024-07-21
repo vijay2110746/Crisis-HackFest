@@ -30,6 +30,8 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
   var _count;
   var _phonenumber;
   var _postcontent;
+  var _doctorNeed;
+  var _medicalSupplies;
   var _item = "medical";
 
   final _namecontroller = TextEditingController();
@@ -37,6 +39,7 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
   final _countcontroller = TextEditingController();
   final _phonenumbercontroller = TextEditingController();
   final _postcontentcontroller = TextEditingController();
+  final _medicalSuppliesController = TextEditingController();
 
   @override
   void initState() {
@@ -52,6 +55,20 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
     _phonenumbercontroller.addListener(_updateText);
     _postcontentcontroller.addListener(_updateText);
     _fetchUserData();
+    _medicalSuppliesController.addListener(_updateText);
+    _initializeUser();
+  }
+
+  Future<void> _initializeUser() async {
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userId = user!.uid;
+      });
+      print(userId);
+    } else {
+      print('User is not logged in');
+    }
   }
 
   void _updateText() {
@@ -61,6 +78,7 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
       _count = _countcontroller.text;
       _phonenumber = _phonenumbercontroller.text;
       _postcontent = _postcontentcontroller.text;
+      _medicalSupplies = _medicalSuppliesController.text;
     });
   }
 
@@ -92,11 +110,17 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
         _phonenumber.isNotEmpty &&
         _postcontent.isNotEmpty &&
         _item.isNotEmpty) {
+        _item.isNotEmpty &&
+        _doctorNeed.isNotEmpty &&
+        _medicalSupplies.isNotEmpty) {
       Map<String, dynamic> newPost = {
         'name': _name,
         'area': _address,
         'phonenumber': _phonenumber,
         'postcontent': _postcontent,
+        'doctorNeed': _doctorNeed,
+        'medicalSupplies': _medicalSupplies,
+        'role' : 'volunteer',
         'item': _item,
         'uid': userId,
       };
@@ -105,6 +129,8 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
           .doc(userId)
           .set({
         'posts': FieldValue.arrayUnion([newPost])
+      await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({
+        'posts': FieldValue.arrayUnion([newPost]),
       }, SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Request submitted successfully')),
@@ -114,6 +140,10 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
       _countcontroller.clear();
       _phonenumbercontroller.clear();
       _postcontentcontroller.clear();
+      _medicalSuppliesController.clear();
+      setState(() {
+        _doctorNeed = null;
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill in all fields')),
@@ -135,6 +165,7 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
               children: [
                 Text(
                   'Request For Medical Assistance',
+                  'Posting For Medical Assistance',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),
@@ -210,6 +241,7 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                       ),
                       maxLines:
                           null, // Allows the text field to grow with input
+                      maxLines: null, // Allows the text field to grow with input
                     ),
                   ),
                 ),
@@ -230,8 +262,29 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                         prefixIcon: Icon(Icons.medical_information),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(40)),
+                  child: DropdownButtonFormField<String>(
+                    value: _doctorNeed,
+                    items: [
+                      DropdownMenuItem(
+                        value: 'Yes',
+                        child: Text('Yes'),
                       ),
                       // Allows the text field to grow with input
+                      DropdownMenuItem(
+                        value: 'No',
+                        child: Text('No'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _doctorNeed = value!;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Yes/No',
+                      prefixIcon: Icon(Icons.medical_information),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
                     ),
                   ),
                 ),
@@ -247,6 +300,7 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
                     height: 70, // Specify the desired height here
                     child: TextFormField(
                       controller: _postcontentcontroller,
+                      controller: _medicalSuppliesController,
                       decoration: InputDecoration(
                         labelText: 'Provide Details if Yes',
                         prefixIcon: Icon(Icons.local_hospital),
@@ -290,4 +344,5 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
       ),
     );
   }
+}
 }

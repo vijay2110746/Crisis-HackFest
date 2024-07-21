@@ -102,6 +102,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         'postcontent': _postcontent,
         'item': _item,
         'uid': userId,
+        'role' : 'volunteer',
       };
 
       await FirebaseFirestore.instance
@@ -139,6 +140,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
               children: [
                 Text(
                   'Request a Boat',
+                  'Posting for Boat availability',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
@@ -153,6 +155,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                     controller: _namecontroller,
                     decoration: InputDecoration(
                       labelText: 'Name of the victim',
+                      labelText: 'Name of the volunteer',
                       prefixIcon: Icon(Icons.man),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40)),
@@ -252,6 +255,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
                     ),
                     onPressed: _submitData,
                     child: Text('Place Request'),
+                    child: Text('Provide Assistance'),
                   ),
                 ),
                 SizedBox(
