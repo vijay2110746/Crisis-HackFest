@@ -77,7 +77,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Icon(
-            Icons.warning_rounded,
+            Icons.logout_rounded,
             color: const Color.fromARGB(255, 0, 0, 0),
             size: 30,
           ),

@@ -63,7 +63,7 @@ class DataService {
   }
 
   Future<String?> createVictim(String name, String email, String pno,
-      String password) async {
+      String password,bool enter) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(
