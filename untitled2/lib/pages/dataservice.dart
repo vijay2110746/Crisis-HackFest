@@ -5,9 +5,11 @@ class DataService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> createUser(String name, String email, String pno, String password) async {
+  Future<String?> createUser(String name, String email, String pno,
+      String password, bool enter) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -15,6 +17,7 @@ class DataService {
       User? user = userCredential.user;
 
       if (user != null) {
+        enter = true;
         // Update the display name
         await user.updateDisplayName('volunteer');
         String userId = user.uid;
@@ -22,21 +25,48 @@ class DataService {
           "name": name,
           "email": email,
           "pno": pno,
-          // Remove password from the Firestore document
         });
 
         print('User created successfully with UID: $userId');
+        return null; // No error
       } else {
+        enter = false;
         print('User creation failed');
+        return 'User creation failed';
       }
     } catch (e) {
-      print('Error creating user: $e');
+      enter = false;
+      String errorMessage;
+
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'email-already-in-use':
+            errorMessage =
+            'The email address is already in use by another account.';
+            break;
+          case 'weak-password':
+            errorMessage = 'The password is too weak.';
+            break;
+          case 'invalid-email':
+            errorMessage = 'The email address is not valid.';
+            break;
+          default:
+            errorMessage = 'An unexpected error occurred.';
+        }
+      } else {
+        errorMessage = 'An unexpected error occurred.';
+      }
+
+      print('Error creating user: $errorMessage');
+      return errorMessage;
     }
   }
 
-  Future<void> createVictim(String name, String email, String pno, String password) async {
+  Future<String?> createVictim(String name, String email, String pno,
+      String password) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -51,15 +81,38 @@ class DataService {
           "name": name,
           "email": email,
           "pno": pno,
-          // Remove password from the Firestore document
         });
 
         print('User created successfully with UID: $userId');
+        return null; // No error
       } else {
         print('User creation failed');
+        return 'User creation failed';
       }
     } catch (e) {
-      print('Error creating user: $e');
+      String errorMessage;
+
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'email-already-in-use':
+            errorMessage =
+            'The email address is already in use by another account.';
+            break;
+          case 'weak-password':
+            errorMessage = 'The password is too weak.';
+            break;
+          case 'invalid-email':
+            errorMessage = 'The email address is not valid.';
+            break;
+          default:
+            errorMessage = 'An unexpected error occurred.';
+        }
+      } else {
+        errorMessage = 'An unexpected error occurred.';
+      }
+
+      print('Error creating user: $errorMessage');
+      return errorMessage;
     }
   }
 }

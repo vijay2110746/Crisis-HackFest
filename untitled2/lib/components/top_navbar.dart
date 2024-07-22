@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled2/pages/role_selection.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -12,6 +11,44 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => RoleSelection()));
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('LogOut?'),
+          content: Text('Are you sure, you want to logout?'),
+          actions: [
+            ElevatedButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            ElevatedButton(
+              child: Text('Logout'),
+              onPressed: () async {
+                // Handle logout logic here
+                Navigator.of(context).pop(); // Dismiss the dialog
+                await FirebaseAuth.instance.signOut();
+
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(
+                //     content: Text('Logged out successfully!'),
+                //     behavior: SnackBarBehavior.floating,
+                //     margin: EdgeInsets.only(bottom: 200.0),
+                //   ),
+                // );
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => RoleSelection()));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -44,12 +81,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: const Color.fromARGB(255, 0, 0, 0),
             size: 30,
           ),
-          onPressed: () async {
-            await FirebaseAuth.instance.signOut();
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setString('user', 'illai');
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => RoleSelection()));
+          onPressed: () {
+            _showLogoutDialog(context);
           },
         ),
       ],
