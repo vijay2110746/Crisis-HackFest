@@ -58,275 +58,223 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
 
   Widget _buildPostsView(CollectionReference collection) {
     return Padding(
-        padding: const EdgeInsets.all(10),
-        child: StreamBuilder<QuerySnapshot>(
+      padding: const EdgeInsets.all(10),
+      child: StreamBuilder<QuerySnapshot>(
         stream: collection.snapshots(),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(
-    child: CircularProgressIndicator(),
-    );
-    }
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-    return Center(
-    child: Text('No posts available'),
-    );
-    }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Text('No posts available'),
+            );
+          }
 
-    // Flatten the array of posts
-    List<Map<String, dynamic>> posts = [];
-    for (var doc in snapshot.data!.docs) {
-    if (doc.exists && doc.data() != null) {
-    var data = doc.data() as Map<String, dynamic>;
-    if (data.containsKey('posts')) {
-    List<dynamic> docPosts = data['posts'];
-    for (var post in docPosts) {
-    posts.add(post as Map<String, dynamic>);
-    }
-    }
-    }
-    }
+          // Flatten the array of posts
+          List<Map<String, dynamic>> posts = [];
+          for (var doc in snapshot.data!.docs) {
+            if (doc.exists && doc.data() != null) {
+              var data = doc.data() as Map<String, dynamic>;
+              if (data.containsKey('posts')) {
+                List<dynamic> docPosts = data['posts'];
+                for (var post in docPosts) {
+                  posts.add(post as Map<String, dynamic>);
+                }
+              }
+            }
+          }
 
-    if (posts.isEmpty) {
-    return Center(
-    child: Text('No posts available'),
-    );
-    }
+          if (posts.isEmpty) {
+            return Center(
+              child: Text('No posts available'),
+            );
+          }
 
-    return ListView.builder(
-    itemCount: posts.length,
-    itemBuilder: (context, index) {
-    final post = posts[index];
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    content: post['postcontent'],
-    priorityLevel: post['prioritylevel'],
-    mobilenumber: post['phonenumber'],
-    headcount: post['headcount'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-
-    // imageUrl: ,
-    ),
+          return ListView.builder(
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              final post = posts[index];
+              if (post['role'] == 'victim') {
+                if (post['item'] == 'boat') {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      priorityLevel: post['prioritylevel'],
+                      mobilenumber: post['phonenumber'],
+                      headcount: post['headcount'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      time: post['timestamp'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'food') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                      name: post['name'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      location: post['area'],
+                      content: post['specialInstructions'],
+                      priorityLevel: post['prioritylevel'],
+                      foodItems: post['foodItems'],
+                      quantity: post['quantity'],
+                      role: post['role'],
+                      id: post['uid'],
+                    ),
+                  );
+                } else if (post['item'] == 'meds') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                      name: post['name'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      location: post['area'],
+                      priorityLevel: post['prioritylevel'],
+                      content: post['additionalnotes'],
+                      quantity: post['quantity'],
+                      doctorneed: post['doctorNeed'],
+                      medicineName: post['medicinename'],
+                      role: post['role'],
+                      id: post['uid'],
+                    ),
+                  );
+                } else if (post['item'] == 'watercan') {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VictimContent(
+                      name: post['name'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      location: post['area'],
+                      role: post['role'],
+                      id: post['uid'],
+                      quantity: post['canquantity'],
+                      content:
+                      'Water can needed in ${post['area']} please help us',
+                      priorityLevel: post['prioritylevel'],
+                    ),
+                  );
+                }
+              } else if (post['role'] == 'volunteer') {
+                print(post);
+                if (post['item'] == 'boat') {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      priorityLevel: post['prioritylevel'],
+                      mobilenumber: post['phonenumber'],
+                      headcount: post['headcount'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      time: post['timestamp'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'food') {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      priorityLevel: post['prioritylevel'],
+                      mobilenumber: post['phonenumber'],
+                      headcount: post['headcount'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      time: post['timestamp'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'can') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      time: post['timestamp'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'charge') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      landmark: post['landmark'],
+                      content: post['postcontent'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      time: post['timestamp'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'medical') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      medicalsupplies: post['medicalSupplies'],
+                      content: post['postcontent'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      time: post['timestamp'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'awareness') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      imageUrl: post['mediaUrl'],
+                      time: post['timestamp'],
+                    ),
+                  );
+                }
+              }
+            },
+          );
+        },
+      ),
     );
-    if(post['role'] == 'victim'){
-    if(post['item'] == 'boat'){
-    if (post['role'] == 'victim') {
-    if (post['item'] == 'boat') {
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: VictimContent(
-    name: post['name'],
-    location: post['area'],
-    content: post['postcontent'],
-    priorityLevel: post['prioritylevel'],
-    mobilenumber: post['phonenumber'],
-    headcount: post['headcount'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    time: post['timestamp'],
-    // imageUrl: ,
-    ),
-    );
-    } else if (post['item'] == 'food'){
-    } else if (post['item'] == 'food') {
-    print(post);
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: VictimContent(
-    name: post['name'],
-    mobilenumber: post['phonenumber'],
-    item: post['item'],
-    location: post['area'],
-    content: post['specialInstructions'],
-    priorityLevel: post['prioritylevel'],
-    foodItems: post['foodItems'],
-    quantity: post['quantity'],
-    role: post['role'],
-    id: post['uid'],
-    ),
-    );
-    } else if (post['item'] == 'meds'){
-    } else if (post['item'] == 'meds') {
-    print(post);
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: VictimContent(
-    name: post['name'],
-    mobilenumber: post['phonenumber'],
-    item: post['item'],
-    location: post['area'],
-    priorityLevel: post['prioritylevel'],
-    content: post['additionalnotes'],
-    quantity: post['quantity'],
-    medicineName: post['medicinename'],
-    role: post['role'],
-    id: post['uid'],
-    name: post['name'],
-    mobilenumber: post['phonenumber'],
-    item: post['item'],
-    location: post['area'],
-    priorityLevel: post['prioritylevel'],
-    content: post['additionalnotes'],
-    quantity: post['quantity'],
-    doctorneed: post['doctorNeed'],
-    medicineName: post['medicinename'],
-    role: post['role'],
-    id: post['uid'],
-    ),
-    );
-    }
-    else if(post['item'] == 'watercan') {
-    } else if (post['item'] == 'watercan') {
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child:  VictimContent(
-    child: VictimContent(
-    name: post['name'],
-    mobilenumber: post['phonenumber'],
-    item: post['item'],
-    location: post['area'],
-    role: post['role'],
-    id: post['uid'],
-    quantity: post['canquantity'],
-    content: 'Water can needed in ${post['area']} please help us',
-    content:
-    'Water can needed in ${post['area']} please help us',
-    priorityLevel: post['prioritylevel'],
-    ),
-    );
-    }
-    } else if(post['role'] == 'volunteer') {
-    } else if (post['role'] == 'volunteer') {
-    print(post);
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    content: post['postcontent'],
-    priorityLevel: post['prioritylevel'],
-    mobilenumber: post['phonenumber'],
-    headcount: post['headcount'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    // imageUrl: ,
-    ),
-    );
-    if(post['item'] == 'boat'){
-    if (post['item'] == 'boat') {
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    content: post['postcontent'],
-    priorityLevel: post['prioritylevel'],
-    mobilenumber: post['phonenumber'],
-    headcount: post['headcount'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    time: post['timestamp'],
-    // imageUrl: ,
-    ),
-    );
-    } else if (post['item'] == 'food') {
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    content: post['postcontent'],
-    priorityLevel: post['prioritylevel'],
-    mobilenumber: post['phonenumber'],
-    headcount: post['headcount'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    time: post['timestamp'],
-    // imageUrl: ,
-    ),
-    );
-    }  else if (post['item'] == 'can') {
-    } else if (post['item'] == 'can') {
-    print(post);
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    content: post['postcontent'],
-    mobilenumber: post['phonenumber'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    time: post['timestamp'],
-    // imageUrl: ,
-    ),
-    );
-    } else if (post['item'] == 'charge') {
-    print(post);
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    landmark: post['landmark'],
-    content: post['postcontent'],
-    mobilenumber: post['phonenumber'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    time: post['timestamp'],
-    // imageUrl: ,
-    ),
-    );
-    } else if (post['item'] == 'medical') {
-    print(post);
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    medicalsupplies: post['medicalSupplies'],
-    content: post['postcontent'],
-    mobilenumber: post['phonenumber'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    time: post['timestamp'],
-    // imageUrl: ,
-    ),
-    );
-    } else if (post['item'] == 'awareness') {
-    print(post);
-    return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Content(
-    name: post['name'],
-    location: post['area'],
-    content: post['postcontent'],
-    item: post['item'],
-    role: post['role'],
-    id: post['uid'],
-    imageUrl: post['mediaUrl'],
-    time: post['timestamp'],
-    ),
-    );
-    }
-    }
-    },
-    );
-    },
-    ),
-    );
-    }
-    }
+  }
+}
