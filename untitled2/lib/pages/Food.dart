@@ -98,6 +98,7 @@ class _FoodProviderState extends State<FoodProvider> {
         'postcontent': _postcontent,
         'item': _item,
         'uid': userId,
+        'timestamp': Timestamp.now(),
         'role' : 'volunteer',
       };
       await FirebaseFirestore.instance

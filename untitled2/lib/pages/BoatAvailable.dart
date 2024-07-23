@@ -102,6 +102,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         'postcontent': _postcontent,
         'item': _item,
         'uid': userId,
+        'timestamp': Timestamp.now(),
         'role' : 'volunteer',
       };
 

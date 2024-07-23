@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 // import 'package:untitled2/pages/content_state.dart';
 
 class Content extends StatefulWidget {
@@ -17,6 +18,7 @@ class Content extends StatefulWidget {
   final String? landmark;
   final String id;
   final String? medicalsupplies;
+  final Timestamp? time;
 
   Content({
     this.profilePicUrl,
@@ -32,6 +34,7 @@ class Content extends StatefulWidget {
     this.role,
     required this.id,
     this.medicalsupplies,
+    this.time,
   });
 
   @override
@@ -43,6 +46,8 @@ class _ContentState extends State<Content> {
   User? user;
   String? userId;
   bool isLiked = false;
+  DateTime? dateTime;
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +56,11 @@ class _ContentState extends State<Content> {
       userId = user!.uid;
     } else {
       print('User is not logged in');
+    }
+    print(widget.time);
+    if (widget.time != null) {
+      dateTime = widget.time!.toDate();
+      print('date $dateTime');
     }
   }
 
@@ -115,13 +125,23 @@ class _ContentState extends State<Content> {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDateTime = '';
+    String date = '';
+    String time = '';
+
+    if (dateTime != null) {
+      formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(dateTime!);
+      print('Formatted Date and Time: $formattedDateTime');
+      date = formattedDateTime.split(' ')[0];
+      time = formattedDateTime.split(' ')[1];
+    }
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16.0),
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.grey[100],
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: Column(
@@ -315,18 +335,7 @@ class _ContentState extends State<Content> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              // if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty)
-              //   ClipRRect(
-              //     borderRadius: BorderRadius.circular(15.0),
-              //     child: Image.network(
-              //       widget.imageUrl!,
-              //       height: 200.0,
-              //       width: double.infinity,
-              //       fit: BoxFit.cover,
-              //     ),
-              //   ),
-              // SizedBox(height: 5),
+              SizedBox(height: 5),
               Row(
                 children: [
                   Padding(padding: EdgeInsets.only(left: 8.0)),
@@ -353,6 +362,24 @@ class _ContentState extends State<Content> {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  SizedBox(height: 20),
+                  if (widget.time != null) ...[
+                    Text(
+                      '$date',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600],),
+                    ),
+                  ],
+                  Spacer(),
+                  if (widget.time != null) ...[
+                    Text(
+                      '$time',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600],),
+                    ),
+                  ],
+                ],
+              )
             ],
           ),
         ),

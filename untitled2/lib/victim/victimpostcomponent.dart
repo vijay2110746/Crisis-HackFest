@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 // import 'package:untitled2/pages/content_state.dart';
 
 class VictimContent extends StatefulWidget {
@@ -19,6 +20,7 @@ class VictimContent extends StatefulWidget {
   final String? quantity;
   final String? doctorneed;
   final String? medicineName;
+  final Timestamp? time;
 
   VictimContent({
     this.profilePicUrl,
@@ -36,6 +38,7 @@ class VictimContent extends StatefulWidget {
     this.medicineName,
     this.foodItems,
     this.doctorneed,
+    this.time,
   });
 
   @override
@@ -47,6 +50,7 @@ class _VictimContentState extends State<VictimContent> {
   User? user;
   String? userId;
   bool isLiked = false;
+  DateTime? dateTime;
   @override
   void initState() {
     super.initState();
@@ -55,6 +59,11 @@ class _VictimContentState extends State<VictimContent> {
       userId = user!.uid;
     } else {
       print('User is not logged in');
+    }
+    print(widget.time);
+    if (widget.time != null) {
+      dateTime = widget.time!.toDate();
+      print('date $dateTime');
     }
   }
 
@@ -119,6 +128,15 @@ class _VictimContentState extends State<VictimContent> {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDateTime = '';
+    String date = '';
+    String time = '';
+    if (dateTime != null) {
+      formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(dateTime!);
+      print('Formatted Date and Time: $formattedDateTime');
+      date = formattedDateTime.split(' ')[0];
+      time = formattedDateTime.split(' ')[1];
+    }
     print(widget.medicineName);
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16.0),
@@ -353,6 +371,24 @@ class _VictimContentState extends State<VictimContent> {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  SizedBox(height: 20),
+                  if (widget.time != null) ...[
+                    Text(
+                      '$date',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600],),
+                    ),
+                  ],
+                  Spacer(),
+                  if (widget.time != null) ...[
+                    Text(
+                      '$time',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600],),
+                    ),
+                  ],
+                ],
+              )
             ],
           ),
         ),

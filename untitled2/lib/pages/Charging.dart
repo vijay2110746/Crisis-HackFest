@@ -102,6 +102,7 @@ class _ChargingPointState extends State<ChargingPoint> {
         'postcontent': _postcontent,
         'item': _item,
         'uid': userId,
+        'timestamp': Timestamp.now(),
         'role' : 'volunteer',
       };
 

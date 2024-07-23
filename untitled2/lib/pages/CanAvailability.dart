@@ -102,6 +102,7 @@ class _CanAskingPageState extends State<CanAskingPage> {
         'postcontent': _postcontent,
         'item': _item,
         'uid': userId,
+        'timestamp': Timestamp.now(),
         'role' : 'volunteer',
       };
 

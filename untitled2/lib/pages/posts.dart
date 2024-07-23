@@ -116,6 +116,8 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
               );
               if(post['role'] == 'victim'){
                 if(post['item'] == 'boat'){
+              if (post['role'] == 'victim') {
+                if (post['item'] == 'boat') {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: VictimContent(
@@ -128,10 +130,12 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       item: post['item'],
                       role: post['role'],
                       id: post['uid'],
+                      time: post['timestamp'],
                       // imageUrl: ,
                     ),
                   );
                 } else if (post['item'] == 'food'){
+                } else if (post['item'] == 'food') {
                   print(post);
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -149,6 +153,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                     ),
                   );
                 } else if (post['item'] == 'meds'){
+                } else if (post['item'] == 'meds') {
                   print(post);
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -163,13 +168,26 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                         medicineName: post['medicinename'],
                         role: post['role'],
                         id: post['uid'],
+                      name: post['name'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      location: post['area'],
+                      priorityLevel: post['prioritylevel'],
+                      content: post['additionalnotes'],
+                      quantity: post['quantity'],
+                      doctorneed: post['doctorNeed'],
+                      medicineName: post['medicinename'],
+                      role: post['role'],
+                      id: post['uid'],
                     ),
                   );
                 }
                 else if(post['item'] == 'watercan') {
+                } else if (post['item'] == 'watercan') {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child:  VictimContent(
+                    child: VictimContent(
                       name: post['name'],
                       mobilenumber: post['phonenumber'],
                       item: post['item'],
@@ -178,11 +196,14 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       id: post['uid'],
                       quantity: post['canquantity'],
                       content: 'Water can needed in ${post['area']} please help us',
+                      content:
+                          'Water can needed in ${post['area']} please help us',
                       priorityLevel: post['prioritylevel'],
                     ),
                   );
                 }
               } else if(post['role'] == 'volunteer') {
+              } else if (post['role'] == 'volunteer') {
                 print(post);
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -200,6 +221,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                   ),
                 );
                 if(post['item'] == 'boat'){
+                if (post['item'] == 'boat') {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Content(
@@ -212,6 +234,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       item: post['item'],
                       role: post['role'],
                       id: post['uid'],
+                      time: post['timestamp'],
                       // imageUrl: ,
                     ),
                   );
@@ -228,10 +251,12 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       item: post['item'],
                       role: post['role'],
                       id: post['uid'],
+                      time: post['timestamp'],
                       // imageUrl: ,
                     ),
                   );
                 }  else if (post['item'] == 'can') {
+                } else if (post['item'] == 'can') {
                   print(post);
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -243,6 +268,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       item: post['item'],
                       role: post['role'],
                       id: post['uid'],
+                      time: post['timestamp'],
                       // imageUrl: ,
                     ),
                   );
@@ -259,7 +285,40 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       item: post['item'],
                       role: post['role'],
                       id: post['uid'],
+                      time: post['timestamp'],
                       // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'medical') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      medicalsupplies: post['medicalSupplies'],
+                      content: post['postcontent'],
+                      mobilenumber: post['phonenumber'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      time: post['timestamp'],
+                      // imageUrl: ,
+                    ),
+                  );
+                } else if (post['item'] == 'awareness') {
+                  print(post);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Content(
+                      name: post['name'],
+                      location: post['area'],
+                      content: post['postcontent'],
+                      item: post['item'],
+                      role: post['role'],
+                      id: post['uid'],
+                      imageUrl: post['mediaUrl'],
+                      time: post['timestamp'],
                     ),
                   );
                 }

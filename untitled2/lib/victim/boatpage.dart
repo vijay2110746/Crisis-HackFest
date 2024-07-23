@@ -92,6 +92,7 @@ class _BoatAskingPageState extends State<BoatAskingPage> {
         'prioritylevel': _prioritylevel,
         'postcontent': _postcontent,
         'item' : _item,
+        'timestamp': Timestamp.now(),
         'role' : _role,
       };
       await FirebaseFirestore.instance.collection('posts').doc(userId).set({

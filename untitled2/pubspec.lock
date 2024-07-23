@@ -275,9 +275,11 @@ packages:
     description:
       name: flutter_plugin_android_lifecycle
       sha256: "8cf40eebf5dec866a6d1956ad7b4f7016e6c0cc69847ab946833b7d43743809f"
+      sha256: c6b0b4c05c458e1c01ad9bcc14041dd7b1f6783d487be4386f793f47a8a4d03e
       url: "https://pub.dev"
     source: hosted
     version: "2.0.19"
+    version: "2.0.20"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -309,9 +311,11 @@ packages:
     description:
       name: google_sign_in_android
       sha256: "7647893c65e6720973f0e579051c8f84b877b486614d9f70a404259c41a4632e"
+      sha256: d30fb34b659679ea74397e9748b4ab5d720720d57dcc79538f1b3c4a68654cb3
       url: "https://pub.dev"
     source: hosted
     version: "6.1.23"
+    version: "6.1.27"
   google_sign_in_ios:
     dependency: transitive
     description:
@@ -365,9 +369,11 @@ packages:
     description:
       name: image_picker_android
       sha256: "0f57fee1e8bfadf8cc41818bbcd7f72e53bb768a54d9496355d5e8a5681a19f1"
+      sha256: cea2bd5b9fcff039a4901d3b13c67fe747f940be9ba76bde1bcd218d168eeb7f
       url: "https://pub.dev"
     source: hosted
     version: "0.8.12+1"
+    version: "0.8.12+6"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -621,9 +627,11 @@ packages:
     description:
       name: shared_preferences_android
       sha256: "1ee8bf911094a1b592de7ab29add6f826a7331fb854273d55918693d5364a1f2"
+      sha256: "93d0ec9dd902d85f326068e6a899487d1f65ffcd5798721a95330b26c8131577"
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
+    version: "2.2.3"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -796,3 +804,5 @@ packages:
 sdks:
   dart: ">=3.3.4 <4.0.0"
   flutter: ">=3.19.0"
+  dart: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"

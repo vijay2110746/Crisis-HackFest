@@ -115,6 +115,7 @@ class _MedicalAssistanceState extends State<MedicalAssistance> {
         'medicalSupplies': _medicalSupplies,
         'role' : 'volunteer',
         'item': _item,
+        'timestamp': Timestamp.now(),
         'uid': userId,
       };
       await FirebaseFirestore.instance.collection('posts-volunteer').doc(userId).set({

@@ -70,6 +70,7 @@ class _PostContentPageState extends State<PostContentPage> {
           'postcontent': _contentController.text,
           'mediaUrl': mediaUrl,
           'item' : 'awareness',
+          'timestamp': Timestamp.now(),
           'uid': FirebaseAuth.instance.currentUser?.uid,
         }])
       }, SetOptions(merge: true));
