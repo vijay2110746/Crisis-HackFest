@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 // import 'package:untitled2/pages/content_state.dart';
 
 class Content extends StatefulWidget {
@@ -48,6 +49,10 @@ class _ContentState extends State<Content> {
   String? volunteerName;
   bool isLiked = false;
   DateTime? dateTime;
+
+  void shareText() {
+    Share.share('Check out this cool content: ${widget.content}', subject: 'Look what I found!');
+  }
 
   @override
   void initState() {
@@ -370,8 +375,8 @@ class _ContentState extends State<Content> {
                   ),
                   Spacer(),
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.cached, color: Colors.black),
+                    onPressed: shareText,
+                    icon: Icon(Icons.share, color: Colors.black),
                   ),
                   IconButton(
                     onPressed: () {},

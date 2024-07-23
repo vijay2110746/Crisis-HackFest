@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled2/components/post_component.dart'; // Make sure the import path is correct
-import 'package:untitled2/components/post_component.dart';
 import 'package:untitled2/victim/victimpostcomponent.dart'; // Make sure the import path is correct
 
 class VolunteerPosts extends StatelessWidget {
@@ -22,6 +21,7 @@ class VolunteerPostsPage extends StatefulWidget {
 
 class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isTranslated = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +41,14 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                   Tab(text: 'Victim Posts'),
                 ],
               ),
+            ),
+            IconButton(
+              icon: Icon(Icons.translate, color: Colors.black),
+              onPressed: () {
+                setState(() {
+                  _isTranslated = !_isTranslated;
+                });
+              },
             ),
             Expanded(
               child: TabBarView(
@@ -105,7 +113,8 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                     child: VictimContent(
                       name: post['name'],
                       location: post['area'],
-                      content: post['postcontent'],
+                      // content: post['postcontent'],
+                      content: _isTranslated ? post['translatedpostcontent'] : post['postcontent'],
                       priorityLevel: post['prioritylevel'],
                       mobilenumber: post['phonenumber'],
                       headcount: post['headcount'],
@@ -176,7 +185,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                     child: Content(
                       name: post['name'],
                       location: post['area'],
-                      content: post['postcontent'],
+                      content: _isTranslated ? post['translatedpostcontent'] : post['postcontent'],
                       priorityLevel: post['prioritylevel'],
                       mobilenumber: post['phonenumber'],
                       headcount: post['headcount'],
@@ -193,7 +202,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                     child: Content(
                       name: post['name'],
                       location: post['area'],
-                      content: post['postcontent'],
+                      content: _isTranslated ? post['translatedpostcontent'] : post['postcontent'],
                       priorityLevel: post['prioritylevel'],
                       mobilenumber: post['phonenumber'],
                       headcount: post['headcount'],
@@ -211,7 +220,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                     child: Content(
                       name: post['name'],
                       location: post['area'],
-                      content: post['postcontent'],
+                      content: _isTranslated ? post['translatedpostcontent'] : post['postcontent'],
                       mobilenumber: post['phonenumber'],
                       item: post['item'],
                       role: post['role'],
@@ -228,7 +237,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       name: post['name'],
                       location: post['area'],
                       landmark: post['landmark'],
-                      content: post['postcontent'],
+                      content: _isTranslated ? post['translatedpostcontent'] : post['postcontent'],
                       mobilenumber: post['phonenumber'],
                       item: post['item'],
                       role: post['role'],
@@ -245,7 +254,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                       name: post['name'],
                       location: post['area'],
                       medicalsupplies: post['medicalSupplies'],
-                      content: post['postcontent'],
+                      content: _isTranslated ? post['translatedpostcontent'] : post['postcontent'],
                       mobilenumber: post['phonenumber'],
                       item: post['item'],
                       role: post['role'],
@@ -261,7 +270,7 @@ class _VolunteerPostsPageState extends State<VolunteerPostsPage> {
                     child: Content(
                       name: post['name'],
                       location: post['area'],
-                      content: post['postcontent'],
+                      content: _isTranslated ? post['translatedpostcontent'] : post['postcontent'],
                       item: post['item'],
                       role: post['role'],
                       id: post['uid'],
