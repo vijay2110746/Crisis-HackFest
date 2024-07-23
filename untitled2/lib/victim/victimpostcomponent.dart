@@ -74,6 +74,7 @@ class _VictimContentState extends State<VictimContent> {
     }
 
     Map<String,dynamic> newPost = {
+    Map<String, dynamic> newPost = {
       'volunteerId': userId,
       'victimId': widget.id,
       'victimName': widget.name,
@@ -83,13 +84,55 @@ class _VictimContentState extends State<VictimContent> {
       'victimMobileNumber': widget.mobilenumber,
       'item': widget.item,
       'headcount': widget.headcount,
+      'item':widget.item,
+      'mobilenumber':widget.mobilenumber,
       'timestamp': Timestamp.now(),
     };
     // newPost['timestamp'] = FieldValue.serverTimestamp();
+    if (widget.priorityLevel != null) {
+      newPost['priorityLevel'] = widget.priorityLevel;
+    }
+    if (widget.headcount != null) {
+      newPost['headcount'] = widget.headcount;
+    }
+    if (widget.imageUrl != null) {
+      newPost['imageUrl'] = widget.imageUrl;
+    }
+    if (widget.role != null) {
+      newPost['role'] = widget.role;
+    }
+    if (widget.foodItems != null) {
+      newPost['foodItems'] = widget.foodItems;
+    }
+    if (widget.quantity != null) {
+      newPost['quantity'] = widget.quantity;
+    }
+    if (widget.doctorneed != null) {
+      newPost['doctorneed'] = widget.doctorneed;
+    }
+    if (widget.medicineName != null) {
+      newPost['medicineName'] = widget.medicineName;
+    }
+    if (widget.time != null) {
+      newPost['postTime'] = widget.time;
+    }
 
+    Future<void> _deletePost() async {
+      try {
+        // Delete document from 'posts' collection
+        await FirebaseFirestore.instance.collection('posts').doc(widget.id).delete();
 
+        // Additional operations, if necessary, after deleting from 'posts'
+        // Example: Updating other collections
+
+        print('Document deleted successfully');
+      } catch (e) {
+        print('Error deleting document: $e');
+      }
+    }
 
     try {
+      await FirebaseFirestore.instance.collection('accepted-posts').doc(widget.id).set(newPost);
       await FirebaseFirestore.instance.collection('chats').doc(userId).set({
         'chats':FieldValue.arrayUnion([newPost])},SetOptions(merge: true)
       );
@@ -119,12 +162,34 @@ class _VictimContentState extends State<VictimContent> {
           }
         ])
       });
+      // await FirebaseFirestore.instance
+      //     .collection('posts')
+      //     .doc(widget.id)
+      //     .update({
+      //   'posts': FieldValue.arrayRemove([
+      //     {
+      //       'name': widget.name,
+      //       'area': widget.location,
+      //       'postcontent': widget.content,
+      //       'prioritylevel': widget.priorityLevel,
+      //       'phonenumber': widget.mobilenumber,
+      //       'headcount': widget.headcount,
+      //       'item': widget.item,
+      //       'role': widget.role,
+      //       'uid': widget.id
+      //     }
+      //   ])
+      // });
+
 
       print('Chat created successfully');
+      _deletePost();
     } catch (e) {
       print('Error creating chat: $e');
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +210,7 @@ class _VictimContentState extends State<VictimContent> {
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: Colors.white,
+            color: Colors.grey[100],
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Column(
@@ -274,6 +340,15 @@ class _VictimContentState extends State<VictimContent> {
                         : TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                   ),
+                  SizedBox(height: 10,),
+                  if(widget.headcount != null && widget.headcount!.isNotEmpty) ...[
+                    Text(
+                      'Quantity : ${widget.headcount}',
+                      maxLines: isExpanded ? null : 4,
+                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
                   SizedBox(height: 10,),
                   Text(
                     "MobileNumber : " + widget.mobilenumber,
