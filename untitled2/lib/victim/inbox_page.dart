@@ -38,7 +38,7 @@ class _InboxPageState extends State<InboxPage> {
                 String item = chat['item'] ?? '';
 
                 Message message = Message(
-                  sender: chat['volunteerId'] ?? 'Unknown',
+                  sender: chat['volunteerName'] ?? 'Unknown',
                   content: chat['message'] ?? '',
                   unreadCount: 0, // You might want to fetch unread count from a different field in Firestore
                 );

@@ -10,8 +10,11 @@ import 'message_category.dart';
 class MessageDetailPage extends StatefulWidget {
   final Message message;
   final List<Message> categoryMessages;
+  final String volunteerName;
 
-  const MessageDetailPage({Key? key, required this.message, required this.categoryMessages}) : super(key: key);
+  const MessageDetailPage({Key? key, required this.message,
+    required this.categoryMessages,
+    required this.volunteerName}) : super(key: key);
 
   @override
   _MessageDetailPageState createState() => _MessageDetailPageState();
@@ -60,6 +63,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
               setState(() {
                 for (var chat in chatArray) {
                   if (chat is Map<String, dynamic> && chat.containsKey('victimId') && chat['victimId'] == victimId) {
+
                     messages =
                         (chat['messages'] as List<dynamic>).map((
                             messageData) {
@@ -221,7 +225,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with Volunteer'),
+        title: Text('${widget.volunteerName} - Volunteer'),
       ),
       body: Column(
         children: [

@@ -11,12 +11,14 @@ class MessageDetailPage extends StatefulWidget {
   final String victimId; // Add victimId as a parameter
   final Message message;
   final List<Message> categoryMessages;
+  final String victimName;
 
   const MessageDetailPage({
     Key? key,
     required this.victimId,
     required this.message,
     required this.categoryMessages,
+    required this.victimName,
   }) : super(key: key);
 
   @override
@@ -56,6 +58,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
           for (var chat in chatArray) {
             if (chat is Map<String, dynamic> && chat['victimId'] == widget.victimId) {
               setState(() {
+
                 messages = (chat['messages'] as List<dynamic>).map((messageData) {
                   return Message(
                     sender: messageData['sender'],
@@ -218,7 +221,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with Victim'),
+        title: Text('${widget.victimName} Victim'),
       ),
       body: Column(
         children: [

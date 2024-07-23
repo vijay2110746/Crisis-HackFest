@@ -45,6 +45,7 @@ class _ContentState extends State<Content> {
   bool isExpanded = false;
   User? user;
   String? userId;
+  String? volunteerName;
   bool isLiked = false;
   DateTime? dateTime;
 
@@ -65,13 +66,30 @@ class _ContentState extends State<Content> {
   }
 
   Future<void> _createChat() async {
+    user = FirebaseAuth.instance.currentUser;
     if (userId == null) {
       print('User ID is null');
       return;
     }
 
+    if (userId != null) {
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        if(data!=null){
+          volunteerName = data['name'];
+        }
+      }
+      }
+
+
     Map<String,dynamic> newPost = {
       'volunteerId': userId,
+      'volunteerName':volunteerName,
       'victimId': widget.id,
       'victimName': widget.name,
       'victimLocation': widget.location,

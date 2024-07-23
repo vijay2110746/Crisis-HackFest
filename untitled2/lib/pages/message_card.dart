@@ -32,6 +32,7 @@ class MessageCard extends StatelessWidget {
               builder: (context) => MessageDetailPage(
                 message: message,
                 categoryMessages: categoryMessages, victimId: message.victimId,
+                victimName: message.sender,
               ),
             ),
           );
