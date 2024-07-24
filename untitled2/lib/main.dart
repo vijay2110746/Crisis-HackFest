@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:untitled2/pages/splash_screen.dart';
-import 'push_noti.dart';
+// import 'push_noti.dart';
 
 
 void main() async {

@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/victim/victim_bottom_navbar.dart';
 import 'package:untitled2/components/bottom_navbar.dart';
-import 'package:untitled2/push_noti.dart';
+// import 'package:untitled2/push_noti.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
       print('FCM Token: $token');
 
 
-      PushNotificationService.sendNotificationToSelectedDriver(token!, context);
+      // PushNotificationService.sendNotificationToSelectedDriver(token!, context);
 
       // Use the token for sending notifications
     } else {
