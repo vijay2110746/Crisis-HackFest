@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // import 'package:untitled2/pages/loginservice.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/victim/victim_bottom_navbar.dart';
 import 'package:untitled2/components/bottom_navbar.dart';
+import 'package:untitled2/push_noti.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -23,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    _setupFCM();
     _controllers = List<AnimationController>.generate(
       _appName.length,
       (index) => AnimationController(
@@ -36,6 +39,29 @@ class _SplashScreenState extends State<SplashScreen>
     }).toList();
 
     _startAnimations();
+  }
+
+  void _setupFCM() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+      String? token = await messaging.getToken();
+      print('FCM Token: $token');
+
+
+      PushNotificationService.sendNotificationToSelectedDriver(token!, context);
+
+      // Use the token for sending notifications
+    } else {
+      print('User declined or has not accepted permission');
+    }
   }
 
   Future<void> _startAnimations() async {
