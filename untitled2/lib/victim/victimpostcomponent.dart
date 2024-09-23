@@ -105,12 +105,29 @@ class _VictimContentState extends State<VictimContent> {
 
 
   Future<void> _createChat() async {
+
+    String? volunteerName;
     if (userId == null) {
       print('User ID is null');
       return;
     }
 
+    if (userId != null) {
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        if(data!=null){
+          volunteerName = data['name'];
+        }
+      }
+    }
+
     Map<String, dynamic> newPost = {
+      'volunteerName':volunteerName,
       'volunteerId': userId,
       'victimId': widget.id,
       'victimName': widget.name,
